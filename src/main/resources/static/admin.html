@@ -19,6 +19,9 @@
       --danger: #ff5757;
       --success: #4caf50;
       --warning: #ffb84d;
+      --purple: #a78bfa;
+      --pink: #f472b6;
+      --teal: #2dd4bf;
       --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     * { box-sizing: border-box; }
@@ -35,89 +38,24 @@
     code { font-family: "JetBrains Mono", "Fira Code", Consolas, monospace; font-size: 12px; background: var(--panel-2); padding: 1px 5px; border-radius: 3px; }
 
     /* SIDEBAR */
-    .sidebar {
-      background: var(--sidebar);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-    .brand {
-      padding: 18px 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: 0.3px;
-    }
-    .brand-icon {
-      width: 28px; height: 28px;
-      background: linear-gradient(135deg, var(--accent), #6c44ff);
-      border-radius: 6px;
-      display: grid; place-items: center;
-    }
+    .sidebar { background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+    .brand { padding: 18px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 15px; letter-spacing: 0.3px; }
+    .brand-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--accent), #6c44ff); border-radius: 6px; display: grid; place-items: center; }
     .brand-icon svg { width: 18px; height: 18px; color: white; }
     nav { flex: 1; padding: 12px 8px; }
-    .nav-group { margin-bottom: 16px; }
-    .nav-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--muted);
-      padding: 6px 12px;
-    }
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      color: var(--text);
-      margin: 1px 0;
-      transition: background 0.15s;
-    }
+    .nav-group { margin-bottom: 14px; }
+    .nav-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--muted); padding: 6px 12px; font-weight: 700; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 7px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; color: var(--text); margin: 1px 0; transition: background 0.15s; }
     .nav-link:hover { background: var(--panel-2); }
-    .nav-link.active {
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-    .nav-link svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .sidebar-footer {
-      padding: 12px;
-      border-top: 1px solid var(--border);
-      font-size: 12px;
-    }
-    .sidebar-footer .auth-line {
-      display: flex; gap: 6px;
-      margin-bottom: 8px;
-    }
-    .sidebar-footer input {
-      flex: 1;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 5px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      min-width: 0;
-    }
+    .nav-link.active { background: var(--accent-soft); color: var(--accent); }
+    .nav-link svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .nav-link .pill { margin-left: auto; font-size: 10px; padding: 1px 7px; border-radius: 10px; background: var(--panel-2); color: var(--muted); }
+    .nav-link.active .pill { background: var(--accent); color: white; }
+    .sidebar-footer { padding: 12px; border-top: 1px solid var(--border); font-size: 12px; }
+    .sidebar-footer .auth-line { display: flex; gap: 6px; margin-bottom: 8px; }
+    .sidebar-footer input { flex: 1; background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 5px 8px; border-radius: 4px; font-size: 12px; min-width: 0; }
     .sidebar-footer input:focus { outline: none; border-color: var(--accent); }
-    .api-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 8px;
-      background: var(--panel);
-      border-radius: 4px;
-      font-size: 11px;
-    }
+    .api-status { display: flex; align-items: center; gap: 6px; padding: 6px 8px; background: var(--panel); border-radius: 4px; font-size: 11px; }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
     .api-status.up .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
     .api-status.down .status-dot { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
@@ -125,187 +63,79 @@
     @keyframes pulse { 50% { opacity: 0.4; } }
 
     /* MAIN */
-    main { padding: 28px 36px; max-width: 1200px; }
-    .page-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .page-header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 700;
-    }
-    .page-header .subtitle {
-      color: var(--muted);
-      font-size: 13px;
-    }
+    main { padding: 28px 36px; max-width: 1280px; }
+    .page-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+    .page-header h1 { margin: 0; font-size: 24px; font-weight: 700; }
+    .page-header .subtitle { color: var(--muted); font-size: 13px; }
     section[data-route] { display: none; }
     section[data-route].active { display: block; animation: fadeIn 0.2s; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
     /* CARDS */
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      margin-bottom: 18px;
-      overflow: hidden;
-    }
-    .card-header {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .card-header h2 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: 600;
-      display: flex; align-items: center; gap: 8px;
-    }
+    .card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 18px; overflow: hidden; }
+    .card-header { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .card-header h2 { margin: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
     .card-header h2 svg { width: 16px; height: 16px; color: var(--accent); }
     .card-body { padding: 16px 18px; }
 
-    /* GRID FOR DASHBOARD STATS */
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-    .stat-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 18px;
-      position: relative;
-      overflow: hidden;
-    }
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent), #6c44ff);
-    }
-    .stat-card .label {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-    .stat-card .value {
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1;
-    }
-    .stat-card .sub {
-      margin-top: 4px;
-      font-size: 11px;
-      color: var(--muted);
-    }
+    /* STATS */
+    .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 22px; }
+    .hero-stat { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; position: relative; overflow: hidden; cursor: pointer; transition: transform 0.15s, border-color 0.15s; }
+    .hero-stat:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .hero-stat::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-gradient, linear-gradient(90deg, var(--accent), var(--purple))); }
+    .hero-stat[data-tone="users"]::before { background: linear-gradient(90deg, var(--accent), #6c44ff); }
+    .hero-stat[data-tone="fleet"]::before { background: linear-gradient(90deg, var(--teal), var(--accent)); }
+    .hero-stat[data-tone="pricing"]::before { background: linear-gradient(90deg, var(--warning), var(--pink)); }
+    .hero-stat[data-tone="address"]::before { background: linear-gradient(90deg, var(--success), var(--teal)); }
+    .hero-stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 8px; font-weight: 700; }
+    .hero-stat .value { font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -1px; }
+    .hero-stat .sub { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .hero-stat .delta { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 600; margin-top: 6px; background: rgba(76,175,80,0.15); color: var(--success); }
 
-    /* FORM ROW */
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
+    /* STATS BREAKDOWN GRID */
+    .breakdown-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .bd-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+    .bd-card h3 { margin: 0 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .bd-card h3 svg { width: 14px; height: 14px; }
+    .bd-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 1px solid var(--border); font-size: 13px; }
+    .bd-row:first-of-type { border-top: none; }
+    .bd-row .bd-label { color: var(--text); }
+    .bd-row .bd-value { font-weight: 700; color: var(--accent); }
+
+    /* BAR CHART */
+    .bar-chart { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 22px; margin-bottom: 18px; }
+    .bar-chart h3 { margin: 0 0 18px; font-size: 14px; font-weight: 600; }
+    .bar-row { display: grid; grid-template-columns: 130px 1fr 50px; gap: 12px; align-items: center; margin-bottom: 10px; }
+    .bar-row .bar-name { font-size: 13px; color: var(--text-soft, var(--muted)); }
+    .bar-row .bar-track { height: 18px; background: var(--panel-2); border-radius: 9px; overflow: hidden; }
+    .bar-row .bar-fill { height: 100%; border-radius: 9px; background: linear-gradient(90deg, var(--accent), var(--purple)); transition: width 0.4s; }
+    .bar-row .bar-value { text-align: right; font-weight: 700; font-size: 13px; }
+
+    /* TABLE / FORM (existing styles) */
+    .form-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 6px; }
     .form-row.cols-2 { grid-template-columns: 1fr 1fr auto; }
     .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr auto; }
-    .form-row input, .form-row select {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 9px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      min-width: 0;
-    }
+    .form-row input, .form-row select { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 9px 12px; border-radius: 6px; font-size: 14px; min-width: 0; }
     .form-row input:focus, .form-row select:focus { outline: none; border-color: var(--accent); }
-    button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+    button { background: var(--accent); color: white; border: none; padding: 9px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
     button:hover { background: var(--accent-hover); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     button svg { width: 14px; height: 14px; }
-    button.btn-secondary {
-      background: var(--panel-2);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
+    button.btn-secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); }
     button.btn-secondary:hover { background: var(--border); }
-    button.btn-danger {
-      background: transparent;
-      color: var(--danger);
-      padding: 4px 10px;
-      font-size: 12px;
-      border: 1px solid transparent;
-    }
+    button.btn-danger { background: transparent; color: var(--danger); padding: 4px 10px; font-size: 12px; border: 1px solid transparent; }
     button.btn-danger:hover { background: rgba(255, 87, 87, 0.1); border-color: var(--danger); }
     .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
-    .note code { font-size: 11px; }
-
-    /* TABLE */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 14px;
-      font-size: 14px;
-    }
-    th, td {
-      text-align: left;
-      padding: 11px 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    th {
-      color: var(--muted);
-      font-weight: 600;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      background: var(--panel-2);
-    }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 14px; }
+    th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; background: var(--panel-2); }
     tbody tr:hover { background: var(--panel-2); }
     .empty { text-align: center; color: var(--muted); padding: 30px; font-style: italic; }
     .badge { display: inline-block; padding: 2px 8px; background: var(--accent-soft); color: var(--accent); border-radius: 10px; font-size: 11px; font-weight: 600; }
-
-    /* TOAST */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-left-width: 4px;
-      padding: 12px 18px;
-      border-radius: 6px;
-      font-size: 13px;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s, opacity 0.3s;
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-      max-width: 340px;
-      z-index: 100;
-    }
+    .badge.success { background: rgba(76,175,80,0.15); color: var(--success); }
+    .badge.warning { background: rgba(255,184,77,0.15); color: var(--warning); }
+    .badge.purple { background: rgba(167,139,250,0.15); color: var(--purple); }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--panel); border: 1px solid var(--border); border-left-width: 4px; padding: 12px 18px; border-radius: 6px; font-size: 13px; box-shadow: var(--shadow); transition: transform 0.3s, opacity 0.3s; opacity: 0; transform: translateY(20px); pointer-events: none; max-width: 340px; z-index: 100; }
     .toast.show { opacity: 1; transform: translateY(0); }
     .toast.success { border-left-color: var(--success); }
     .toast.error { border-left-color: var(--danger); }
@@ -324,9 +154,9 @@
   <div class="brand">
     <span class="brand-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"></path>
-        <circle cx="6.5" cy="16.5" r="2.5"></circle>
-        <circle cx="16.5" cy="16.5" r="2.5"></circle>
+        <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+        <circle cx="6.5" cy="16.5" r="2.5"/>
+        <circle cx="16.5" cy="16.5" r="2.5"/>
       </svg>
     </span>
     <span>Car Rental</span>
@@ -339,22 +169,38 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         Dashboard
       </div>
+      <div class="nav-link" data-section="stats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Stats
+      </div>
     </div>
 
     <div class="nav-group">
-      <div class="nav-title">Core</div>
+      <div class="nav-title">Customers</div>
+      <div class="nav-link" data-section="users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Registered users
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Operations</div>
       <div class="nav-link" data-section="jobs">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
         Jobs
       </div>
       <div class="nav-link" data-section="employees">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
         Employees
       </div>
     </div>
 
     <div class="nav-group">
-      <div class="nav-title">Cars</div>
+      <div class="nav-title">Fleet</div>
+      <div class="nav-link" data-section="cars">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>
+        Cars
+      </div>
       <div class="nav-link" data-section="brands">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
         Brands
@@ -362,6 +208,38 @@
       <div class="nav-link" data-section="colors">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="20" r="2.5"/></svg>
         Colors
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Catalog</div>
+      <div class="nav-link" data-section="car-types">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        Body types
+      </div>
+      <div class="nav-link" data-section="fuel-types">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg>
+        Fuel types
+      </div>
+      <div class="nav-link" data-section="transmission-types">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/></svg>
+        Transmissions
+      </div>
+      <div class="nav-link" data-section="insurances">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Insurances
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Pricing</div>
+      <div class="nav-link" data-section="prices">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Prices
+      </div>
+      <div class="nav-link" data-section="discounts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        Discounts
       </div>
     </div>
 
@@ -381,7 +259,7 @@
       </div>
       <div class="nav-link" data-section="buildings">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/></svg>
-        Building Numbers
+        Buildings
       </div>
     </div>
   </nav>
@@ -405,54 +283,79 @@
     <div class="page-header">
       <div>
         <h1>Dashboard</h1>
-        <div class="subtitle">Overview of your car rental backend</div>
+        <div class="subtitle">Health check + quick links into your tooling</div>
       </div>
       <button class="btn-secondary" onclick="loadDashboard()">Refresh</button>
     </div>
-
-    <div class="stat-grid" id="stat-grid">
-      <!-- populated by JS -->
-    </div>
-
+    <div class="hero-stats" id="dashboard-tiles"></div>
     <div class="card">
-      <div class="card-header">
-        <h2>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Quick links
-        </h2>
-      </div>
+      <div class="card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Quick links</h2></div>
       <div class="card-body">
-        <p style="margin: 0 0 12px; font-size: 13px; color: var(--muted);">External tools wired to this backend:</p>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="/" target="_blank"><button class="btn-secondary">Rental site ↗</button></a>
+          <a href="/marketplace.html" target="_blank"><button class="btn-secondary">Marketplace ↗</button></a>
           <a href="/swagger-ui/index.html" target="_blank"><button class="btn-secondary">Swagger UI ↗</button></a>
           <a href="/v3/api-docs" target="_blank"><button class="btn-secondary">OpenAPI JSON ↗</button></a>
-          <a href="/actuator/health" target="_blank"><button class="btn-secondary">Actuator health ↗</button></a>
+          <a href="/actuator/health" target="_blank"><button class="btn-secondary">Health ↗</button></a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section data-route="stats">
+    <div class="page-header">
+      <div>
+        <h1>Stats</h1>
+        <div class="subtitle">Aggregated view across every entity in the system</div>
+      </div>
+      <button class="btn-secondary" onclick="loadStats()">Refresh</button>
+    </div>
+    <div class="hero-stats" id="stats-hero"></div>
+    <div class="bar-chart">
+      <h3>Rows by category</h3>
+      <div id="stats-bars"></div>
+    </div>
+    <div class="breakdown-grid" id="stats-breakdown"></div>
+    <div class="card" style="margin-top: 18px;">
+      <div class="card-header"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Recent users</h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Name</th><th>Email</th><th>Joined</th></tr></thead>
+          <tbody id="stats-recent-users"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">From <code>GET /api/admin/stats</code> · recentUsers array</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- USERS -->
+  <section data-route="users">
+    <div class="page-header">
+      <div><h1>Registered users</h1><div class="subtitle">Customer accounts from <code>app_user</code></div></div>
+      <button class="btn-secondary" onclick="loadUsers()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All users <span id="users-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Full name</th><th>Email</th><th>Joined</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="users-tbody"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">GET <code>/api/admin/users</code> · DELETE <code>/api/admin/users/{id}</code></div>
       </div>
     </div>
   </section>
 
   <!-- JOBS -->
   <section data-route="jobs">
-    <div class="page-header">
-      <div>
-        <h1>Jobs</h1>
-        <div class="subtitle">Employee role titles (Manager, Driver, Mechanic, …)</div>
-      </div>
-      <button class="btn-secondary" onclick="loadJobs()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>Add new job</h2></div>
+    <div class="page-header"><div><h1>Jobs</h1><div class="subtitle">Employee role titles</div></div><button class="btn-secondary" onclick="loadJobs()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new job</h2></div>
       <div class="card-body">
         <form class="form-row" onsubmit="addJob(event)">
           <input id="job-title" type="text" placeholder="Job title (e.g. Manager)" required>
           <button type="submit">Add Job</button>
         </form>
-        <div class="note">POST <code>/api/jobs/addNewJob</code> with body <code>{ "title": "..." }</code></div>
+        <div class="note">POST <code>/api/jobs/addNewJob</code> with <code>{"title":"..."}</code></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><h2>All jobs <span id="jobs-count" class="badge">0</span></h2></div>
+    <div class="card"><div class="card-header"><h2>All jobs <span id="jobs-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th style="width:60px">ID</th><th>Title</th><th style="width:90px">Actions</th></tr></thead>
         <tbody id="jobs-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
@@ -460,17 +363,10 @@
     </div>
   </section>
 
-  <!-- EMPLOYEES (read-only) -->
+  <!-- EMPLOYEES -->
   <section data-route="employees">
-    <div class="page-header">
-      <div>
-        <h1>Employees</h1>
-        <div class="subtitle">Read-only listing (add via registration endpoint)</div>
-      </div>
-      <button class="btn-secondary" onclick="loadEmployees()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>All employees <span id="employees-count" class="badge">0</span></h2></div>
+    <div class="page-header"><div><h1>Employees</h1><div class="subtitle">Internal staff (read-only)</div></div><button class="btn-secondary" onclick="loadEmployees()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>All employees <span id="employees-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th>ID</th><th>Full name</th><th>Email</th><th>Phone</th><th>Verified</th></tr></thead>
         <tbody id="employees-tbody"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table>
@@ -479,17 +375,22 @@
     </div>
   </section>
 
+  <!-- CARS -->
+  <section data-route="cars">
+    <div class="page-header"><div><h1>Cars</h1><div class="subtitle">Vehicles in the fleet (read + delete)</div></div><button class="btn-secondary" onclick="loadCars()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>All cars <span id="cars-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Brand</th><th>Model</th><th>Color</th><th>Available</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="cars-tbody"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">GET <code>/api/admin/cars</code> · DELETE <code>/api/admin/cars/{id}</code>. Add cars via the existing car-association endpoints.</div>
+      </div>
+    </div>
+  </section>
+
   <!-- BRANDS -->
   <section data-route="brands">
-    <div class="page-header">
-      <div>
-        <h1>Car Brands</h1>
-        <div class="subtitle">Manufacturers (Toyota, BMW, …)</div>
-      </div>
-      <button class="btn-secondary" onclick="loadBrands()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>Add new brand</h2></div>
+    <div class="page-header"><div><h1>Car Brands</h1><div class="subtitle">Manufacturers</div></div><button class="btn-secondary" onclick="loadBrands()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new brand</h2></div>
       <div class="card-body">
         <form class="form-row" onsubmit="addBrand(event)">
           <input id="brand-name" type="text" placeholder="Brand name (e.g. Toyota)" required>
@@ -498,8 +399,7 @@
         <div class="note">POST <code>/api/carBrands/addCarBrand?brandName=...</code></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><h2>All brands <span id="brands-count" class="badge">0</span></h2></div>
+    <div class="card"><div class="card-header"><h2>All brands <span id="brands-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th>Brand</th><th style="width:90px">Actions</th></tr></thead>
         <tbody id="brands-tbody"><tr><td colspan="2" class="empty">Loading…</td></tr></tbody></table>
@@ -509,15 +409,8 @@
 
   <!-- COLORS -->
   <section data-route="colors">
-    <div class="page-header">
-      <div>
-        <h1>Colors</h1>
-        <div class="subtitle">Available paint colors for cars</div>
-      </div>
-      <button class="btn-secondary" onclick="loadColors()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>Add new color</h2></div>
+    <div class="page-header"><div><h1>Colors</h1><div class="subtitle">Available paint colors</div></div><button class="btn-secondary" onclick="loadColors()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new color</h2></div>
       <div class="card-body">
         <form class="form-row" onsubmit="addColor(event)">
           <input id="color-name" type="text" placeholder="Color name (e.g. red)" required>
@@ -526,8 +419,7 @@
         <div class="note">POST <code>/api/colors/addColor?colorName=...</code></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><h2>All colors <span id="colors-count" class="badge">0</span></h2></div>
+    <div class="card"><div class="card-header"><h2>All colors <span id="colors-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th style="width:60px">ID</th><th>Swatch</th><th>Name</th><th style="width:90px">Actions</th></tr></thead>
         <tbody id="colors-tbody"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody></table>
@@ -535,47 +427,147 @@
     </div>
   </section>
 
+  <!-- CAR TYPES -->
+  <section data-route="car-types">
+    <div class="page-header"><div><h1>Body types</h1><div class="subtitle">Sedan, SUV, Hatchback, etc.</div></div><button class="btn-secondary" onclick="loadCarTypes()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new body type</h2></div>
+      <div class="card-body">
+        <form class="form-row" onsubmit="addCarType(event)">
+          <input id="cartype-name" type="text" placeholder="Body type (e.g. SUV)" required>
+          <button type="submit">Add</button>
+        </form>
+        <div class="note">POST <code>/api/admin/car-types</code> with <code>{"type":"..."}</code></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><h2>All body types <span id="car-types-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Type</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="car-types-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUEL TYPES -->
+  <section data-route="fuel-types">
+    <div class="page-header"><div><h1>Fuel types</h1><div class="subtitle">Petrol, Diesel, Electric, Hybrid…</div></div><button class="btn-secondary" onclick="loadFuelTypes()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new fuel type</h2></div>
+      <div class="card-body">
+        <form class="form-row" onsubmit="addFuelType(event)">
+          <input id="fuel-name" type="text" placeholder="Fuel type (e.g. Petrol)" required>
+          <button type="submit">Add</button>
+        </form>
+        <div class="note">POST <code>/api/admin/fuel-types</code> with <code>{"type":"..."}</code></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><h2>All fuel types <span id="fuel-types-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Type</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="fuel-types-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSMISSION TYPES -->
+  <section data-route="transmission-types">
+    <div class="page-header"><div><h1>Transmissions</h1><div class="subtitle">Automatic, Manual, CVT…</div></div><button class="btn-secondary" onclick="loadTransTypes()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new transmission</h2></div>
+      <div class="card-body">
+        <form class="form-row" onsubmit="addTransType(event)">
+          <input id="trans-name" type="text" placeholder="Transmission (e.g. Automatic)" required>
+          <button type="submit">Add</button>
+        </form>
+        <div class="note">POST <code>/api/admin/transmission-types</code> with <code>{"type":"..."}</code></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><h2>All transmissions <span id="trans-types-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Type</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="trans-types-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSURANCES -->
+  <section data-route="insurances">
+    <div class="page-header"><div><h1>Insurances</h1><div class="subtitle">Insurance policies by year + provider</div></div><button class="btn-secondary" onclick="loadInsurances()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new insurance</h2></div>
+      <div class="card-body">
+        <form class="form-row cols-2" onsubmit="addInsurance(event)">
+          <input id="ins-year" type="number" placeholder="Year (e.g. 2024)" min="1980" max="2100" required>
+          <input id="ins-company" type="text" placeholder="Company (e.g. Allianz)" required>
+          <button type="submit">Add</button>
+        </form>
+        <div class="note">POST <code>/api/admin/insurances</code> with <code>{"year":2024,"company":"..."}</code></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><h2>All insurances <span id="ins-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Year</th><th>Company</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="ins-tbody"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICES -->
+  <section data-route="prices">
+    <div class="page-header"><div><h1>Prices</h1><div class="subtitle">Read-only · create via car-association endpoints</div></div><button class="btn-secondary" onclick="loadPrices()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>All prices <span id="prices-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Amount</th><th>Discount avail.</th></tr></thead>
+        <tbody id="prices-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">GET <code>/api/admin/prices</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DISCOUNTS -->
+  <section data-route="discounts">
+    <div class="page-header"><div><h1>Discounts</h1><div class="subtitle">Promotional discount rates with start/end dates</div></div><button class="btn-secondary" onclick="loadDiscounts()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new discount</h2></div>
+      <div class="card-body">
+        <form class="form-row cols-3" onsubmit="addDiscount(event)">
+          <input id="disc-rate" type="number" placeholder="Rate % (0–100)" min="0" max="100" required>
+          <input id="disc-start" type="datetime-local" required>
+          <input id="disc-end" type="datetime-local" required>
+          <button type="submit">Add</button>
+        </form>
+        <div class="note">POST <code>/api/admin/discounts</code> with <code>{"rate":15,"startDate":"2026-01-01T00:00","endDate":"2026-02-01T00:00"}</code></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-header"><h2>All discounts <span id="disc-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Rate</th><th>Starts</th><th>Ends</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="disc-tbody"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
   <!-- COUNTRIES -->
   <section data-route="countries">
-    <div class="page-header">
-      <div>
-        <h1>Countries</h1>
-        <div class="subtitle">Top-level address entity</div>
-      </div>
-      <button class="btn-secondary" onclick="loadCountries()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>All countries <span id="countries-count" class="badge">0</span></h2></div>
+    <div class="page-header"><div><h1>Countries</h1><div class="subtitle">Top-level address entity</div></div><button class="btn-secondary" onclick="loadCountries()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>All countries <span id="countries-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th>ID</th><th>Name</th><th>Cities</th></tr></thead>
         <tbody id="countries-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
-        <div class="note">GET <code>/api/Country/getAll</code>. Add/update use complex DTOs — best done from Swagger.</div>
+        <div class="note">GET <code>/api/Country/getAll</code></div>
       </div>
     </div>
   </section>
 
   <!-- CITIES -->
   <section data-route="cities">
-    <div class="page-header">
-      <div>
-        <h1>Cities</h1>
-        <div class="subtitle">Cities belong to countries</div>
-      </div>
-      <button class="btn-secondary" onclick="loadCities()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>Add new city (under a country)</h2></div>
+    <div class="page-header"><div><h1>Cities</h1><div class="subtitle">Cities belong to countries</div></div><button class="btn-secondary" onclick="loadCities()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new city (under a country)</h2></div>
       <div class="card-body">
         <form class="form-row cols-2" onsubmit="addCity(event)">
           <input id="city-country" type="text" placeholder="Country name (must exist)" required>
           <input id="city-name" type="text" placeholder="City name" required>
           <button type="submit">Add City</button>
         </form>
-        <div class="note">POST <code>/api/City/AddCity/{countryName}</code> with body <code>{ "cityName": "..." }</code></div>
+        <div class="note">POST <code>/api/City/AddCity/{countryName}</code> with <code>{"cityName":"..."}</code></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><h2>All cities <span id="cities-count" class="badge">0</span></h2></div>
+    <div class="card"><div class="card-header"><h2>All cities <span id="cities-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th>ID</th><th>Name</th><th>Country</th></tr></thead>
         <tbody id="cities-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
@@ -585,26 +577,18 @@
 
   <!-- STREETS -->
   <section data-route="streets">
-    <div class="page-header">
-      <div>
-        <h1>Streets</h1>
-        <div class="subtitle">Streets belong to cities</div>
-      </div>
-      <button class="btn-secondary" onclick="loadStreets()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>Add new street (under a city)</h2></div>
+    <div class="page-header"><div><h1>Streets</h1><div class="subtitle">Streets belong to cities</div></div><button class="btn-secondary" onclick="loadStreets()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>Add new street (under a city)</h2></div>
       <div class="card-body">
         <form class="form-row cols-2" onsubmit="addStreet(event)">
           <input id="street-city" type="text" placeholder="City name (must exist)" required>
           <input id="street-name" type="text" placeholder="Street name" required>
           <button type="submit">Add Street</button>
         </form>
-        <div class="note">POST <code>/api/Street/AddStreet/{cityName}</code> with body <code>{ "streetName": "..." }</code></div>
+        <div class="note">POST <code>/api/Street/AddStreet/{cityName}</code> with <code>{"streetName":"..."}</code></div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-header"><h2>All streets <span id="streets-count" class="badge">0</span></h2></div>
+    <div class="card"><div class="card-header"><h2>All streets <span id="streets-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th>ID</th><th>Name</th><th>City</th></tr></thead>
         <tbody id="streets-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
@@ -614,15 +598,8 @@
 
   <!-- BUILDING NUMBERS -->
   <section data-route="buildings">
-    <div class="page-header">
-      <div>
-        <h1>Building Numbers</h1>
-        <div class="subtitle">House/building numbers within a street</div>
-      </div>
-      <button class="btn-secondary" onclick="loadBuildings()">Refresh</button>
-    </div>
-    <div class="card">
-      <div class="card-header"><h2>All building numbers <span id="buildings-count" class="badge">0</span></h2></div>
+    <div class="page-header"><div><h1>Building Numbers</h1><div class="subtitle">House/building numbers within a street</div></div><button class="btn-secondary" onclick="loadBuildings()">Refresh</button></div>
+    <div class="card"><div class="card-header"><h2>All building numbers <span id="buildings-count" class="badge">0</span></h2></div>
       <div class="card-body">
         <table><thead><tr><th>ID</th><th>No</th><th>Street</th></tr></thead>
         <tbody id="buildings-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
@@ -635,14 +612,12 @@
 <div id="toast" class="toast"></div>
 
 <script>
-  /* ===== AUTH ===== */
+  /* ===== AUTH / FETCH ===== */
   function getAuthHeader() {
     const u = document.getElementById('username').value;
     const p = document.getElementById('password').value;
     return 'Basic ' + btoa(u + ':' + p);
   }
-
-  /* ===== STATUS + TOAST ===== */
   function setStatus(text, kind) {
     document.getElementById('status-text').textContent = text;
     document.getElementById('api-status').className = 'api-status ' + (kind || '');
@@ -654,8 +629,6 @@
     clearTimeout(showToast._t);
     showToast._t = setTimeout(() => t.classList.remove('show'), 3500);
   }
-
-  /* ===== FETCH WRAPPER ===== */
   async function api(path, options) {
     options = options || {};
     options.headers = Object.assign({}, options.headers, {
@@ -679,24 +652,29 @@
     if (resp.status === 204 || !ct) return null;
     return ct.includes('json') ? resp.json() : resp.text();
   }
-
   function esc(s) {
-    return String(s == null ? '' : s)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
-
   function renderEmpty(tbody, cols, msg) {
     document.getElementById(tbody).innerHTML = `<tr><td colspan="${cols}" class="empty">${esc(msg)}</td></tr>`;
   }
 
-  /* ===== NAV ROUTING ===== */
+  /* ===== ROUTING ===== */
   const sectionLoaders = {
     dashboard: loadDashboard,
+    stats: loadStats,
+    users: loadUsers,
     jobs: loadJobs,
     employees: loadEmployees,
+    cars: loadCars,
     brands: loadBrands,
     colors: loadColors,
+    'car-types': loadCarTypes,
+    'fuel-types': loadFuelTypes,
+    'transmission-types': loadTransTypes,
+    insurances: loadInsurances,
+    prices: loadPrices,
+    discounts: loadDiscounts,
     countries: loadCountries,
     cities: loadCities,
     streets: loadStreets,
@@ -715,7 +693,6 @@
   });
   window.addEventListener('hashchange', () => showSection(location.hash.slice(1) || 'dashboard'));
 
-  /* ===== RECONNECT ===== */
   async function reconnect() {
     setStatus('connecting', 'connecting');
     try {
@@ -732,38 +709,114 @@
 
   /* ===== DASHBOARD ===== */
   async function loadDashboard() {
-    const grid = document.getElementById('stat-grid');
-    const cards = [
-      { label: 'Jobs',          path: '/api/jobs/getAllJobs',                  section: 'jobs' },
-      { label: 'Employees',     path: '/api/employees/getAllEmployees',        section: 'employees' },
-      { label: 'Brands',        path: '/api/carBrands/getAllCarBrands',        section: 'brands' },
-      { label: 'Colors',        path: '/api/colors/getAllColors',              section: 'colors' },
-      { label: 'Countries',     path: '/api/Country/getAll',                   section: 'countries' },
-      { label: 'Cities',        path: '/api/City/GetAllCities',                section: 'cities' },
-      { label: 'Streets',       path: '/api/Street/GetAllStreets',             section: 'streets' },
-      { label: 'Buildings',     path: '/api/BuildingNumber/GetAllBuildingNumbers', section: 'buildings' },
-    ];
-    grid.innerHTML = cards.map(c => `
-      <div class="stat-card" onclick="showSection('${c.section}')" style="cursor:pointer">
-        <div class="label">${esc(c.label)}</div>
-        <div class="value" id="stat-${c.section}">—</div>
-        <div class="sub">click to manage</div>
-      </div>
-    `).join('');
     setStatus('connecting', 'connecting');
-    let anySuccess = false;
-    await Promise.all(cards.map(async c => {
-      try {
-        const data = await api(c.path);
-        const count = Array.isArray(data) ? data.length : (data ? 1 : 0);
-        document.getElementById('stat-' + c.section).textContent = count;
-        anySuccess = true;
-      } catch (e) {
-        document.getElementById('stat-' + c.section).textContent = '!';
-        document.getElementById('stat-' + c.section).style.color = 'var(--danger)';
+    try {
+      const stats = await api('/api/admin/stats');
+      const c = stats.categories;
+      const tiles = [
+        { tone: 'users',   label: 'Registered users', value: c.customers.users, sub: c.customers.newThisWeek + ' new this week', section: 'users' },
+        { tone: 'fleet',   label: 'Fleet size',       value: c.fleet.cars,      sub: c.fleet.brands + ' brands · ' + c.fleet.models + ' models', section: 'cars' },
+        { tone: 'pricing', label: 'Active discounts', value: c.pricing.discounts, sub: c.pricing.prices + ' price entries',     section: 'discounts' },
+        { tone: 'address', label: 'Cities covered',   value: c.address.cities,  sub: c.address.countries + ' countries',         section: 'cities' },
+      ];
+      document.getElementById('dashboard-tiles').innerHTML = tiles.map(t => `
+        <div class="hero-stat" data-tone="${t.tone}" onclick="showSection('${t.section}')">
+          <div class="label">${esc(t.label)}</div>
+          <div class="value">${t.value}</div>
+          <div class="sub">${esc(t.sub)}</div>
+        </div>`).join('');
+      setStatus('connected', 'up');
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  /* ===== STATS ===== */
+  async function loadStats() {
+    try {
+      const s = await api('/api/admin/stats');
+      const c = s.categories;
+      // Hero
+      const hero = [
+        { tone: 'users',   label: 'Total users',     value: c.customers.users,   sub: c.customers.newThisWeek + ' new this week' },
+        { tone: 'fleet',   label: 'Fleet rows',      value: (c.fleet.cars + c.fleet.brands + c.fleet.models + c.fleet.colors), sub: 'across cars, brands, models, colors' },
+        { tone: 'pricing', label: 'Catalog rows',    value: (c.catalog.carTypes + c.catalog.fuelTypes + c.catalog.transmissionTypes + c.catalog.insurances), sub: 'types + insurances' },
+        { tone: 'address', label: 'Address rows',    value: (c.address.countries + c.address.cities + c.address.streets + c.address.buildingNumbers + c.address.addresses), sub: 'countries → buildings' },
+      ];
+      document.getElementById('stats-hero').innerHTML = hero.map(t => `
+        <div class="hero-stat" data-tone="${t.tone}">
+          <div class="label">${esc(t.label)}</div>
+          <div class="value">${t.value}</div>
+          <div class="sub">${esc(t.sub)}</div>
+        </div>`).join('');
+
+      // Bar chart of all rows by category
+      const totals = [
+        { name: 'Customers',  v: c.customers.users },
+        { name: 'Operations', v: c.operations.jobs + c.operations.employees },
+        { name: 'Fleet',      v: c.fleet.cars + c.fleet.brands + c.fleet.models + c.fleet.colors },
+        { name: 'Catalog',    v: c.catalog.carTypes + c.catalog.fuelTypes + c.catalog.transmissionTypes + c.catalog.insurances },
+        { name: 'Pricing',    v: c.pricing.prices + c.pricing.discounts },
+        { name: 'Address',    v: c.address.countries + c.address.cities + c.address.streets + c.address.buildingNumbers + c.address.addresses },
+      ];
+      const maxVal = Math.max(1, ...totals.map(t => t.v));
+      document.getElementById('stats-bars').innerHTML = totals.map(t => `
+        <div class="bar-row">
+          <div class="bar-name">${esc(t.name)}</div>
+          <div class="bar-track"><div class="bar-fill" style="width: ${(t.v / maxVal * 100).toFixed(1)}%"></div></div>
+          <div class="bar-value">${t.v}</div>
+        </div>`).join('');
+
+      // Breakdown
+      const cats = [
+        { title: 'Customers',  icon: 'users',   color: 'var(--accent)',  rows: [['Total users', c.customers.users], ['New this week', c.customers.newThisWeek]] },
+        { title: 'Operations', icon: 'briefcase', color: 'var(--purple)', rows: [['Jobs', c.operations.jobs], ['Employees', c.operations.employees]] },
+        { title: 'Fleet',      icon: 'car',     color: 'var(--teal)',    rows: [['Cars', c.fleet.cars], ['Brands', c.fleet.brands], ['Models', c.fleet.models], ['Colors', c.fleet.colors]] },
+        { title: 'Catalog',    icon: 'tag',     color: 'var(--warning)', rows: [['Body types', c.catalog.carTypes], ['Fuel types', c.catalog.fuelTypes], ['Transmissions', c.catalog.transmissionTypes], ['Insurances', c.catalog.insurances]] },
+        { title: 'Pricing',    icon: 'dollar',  color: 'var(--pink)',    rows: [['Price entries', c.pricing.prices], ['Discounts', c.pricing.discounts]] },
+        { title: 'Address',    icon: 'pin',     color: 'var(--success)', rows: [['Countries', c.address.countries], ['Cities', c.address.cities], ['Streets', c.address.streets], ['Buildings', c.address.buildingNumbers], ['Addresses', c.address.addresses]] },
+      ];
+      document.getElementById('stats-breakdown').innerHTML = cats.map(cat => `
+        <div class="bd-card">
+          <h3 style="color: ${cat.color}">${esc(cat.title)}</h3>
+          ${cat.rows.map(r => `<div class="bd-row"><span class="bd-label">${esc(r[0])}</span><span class="bd-value">${r[1]}</span></div>`).join('')}
+        </div>`).join('');
+
+      // Recent users
+      const tb = document.getElementById('stats-recent-users');
+      const recent = s.recentUsers || [];
+      if (!recent.length) {
+        tb.innerHTML = '<tr><td colspan="4" class="empty">No users registered yet.</td></tr>';
+      } else {
+        tb.innerHTML = recent.map(u => `<tr><td>${u.id}</td><td>${esc(u.fullName)}</td><td>${esc(u.email)}</td><td>${esc(u.createdAt)}</td></tr>`).join('');
       }
-    }));
-    setStatus(anySuccess ? 'connected' : 'error', anySuccess ? 'up' : 'down');
+      setStatus('connected', 'up');
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  }
+
+  /* ===== USERS ===== */
+  async function loadUsers() {
+    try {
+      const users = await api('/api/admin/users');
+      document.getElementById('users-count').textContent = users.length;
+      const tb = document.getElementById('users-tbody');
+      if (!users.length) { renderEmpty('users-tbody', 5, 'No users registered yet.'); return; }
+      tb.innerHTML = users.map(u => `
+        <tr>
+          <td>${u.id}</td>
+          <td>${esc(u.fullName)}</td>
+          <td>${esc(u.email)}</td>
+          <td>${u.createdAt ? esc(u.createdAt.split('T')[0]) : ''}</td>
+          <td><button class="btn-danger" onclick="deleteUser(${u.id}, '${esc(u.email)}')">Delete</button></td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('users-tbody', 5, 'Error: ' + e.message); }
+  }
+  async function deleteUser(id, email) {
+    if (!confirm('Delete user "' + email + '"? This is permanent.')) return;
+    try { await api('/api/admin/users/' + id, { method: 'DELETE' }); showToast('User deleted', 'success'); loadUsers(); }
+    catch (e) { showToast(e.message, 'error'); }
   }
 
   /* ===== JOBS ===== */
@@ -771,30 +824,25 @@
     try {
       const jobs = await api('/api/jobs/getAllJobs');
       document.getElementById('jobs-count').textContent = jobs.length;
-      const tbody = document.getElementById('jobs-tbody');
+      const tb = document.getElementById('jobs-tbody');
       if (!jobs.length) { renderEmpty('jobs-tbody', 3, 'No jobs yet.'); return; }
-      tbody.innerHTML = jobs.map(j => `
-        <tr>
-          <td>${j.id}</td>
-          <td>${esc(j.title)}</td>
-          <td><button class="btn-danger" onclick="deleteJob(${j.id})">Delete</button></td>
-        </tr>`).join('');
+      tb.innerHTML = jobs.map(j => `<tr><td>${j.id}</td><td>${esc(j.title)}</td><td><button class="btn-danger" onclick="deleteJob(${j.id})">Delete</button></td></tr>`).join('');
       setStatus('connected', 'up');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('jobs-tbody', 3, 'Error: ' + e.message); }
+    } catch (e) { showToast(e.message, 'error'); }
   }
   async function addJob(e) {
     e.preventDefault();
     const t = document.getElementById('job-title');
     try {
       const saved = await api('/api/jobs/addNewJob', { method: 'POST', body: { title: t.value.trim() } });
-      showToast(`Added "${saved.title}" (id ${saved.id})`, 'success');
+      showToast(`Added "${saved.title}"`, 'success');
       t.value = ''; loadJobs();
-    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+    } catch (e2) { showToast(e2.message, 'error'); }
   }
   async function deleteJob(id) {
     if (!confirm('Delete job #' + id + '?')) return;
     try { await api('/api/jobs/deleteById/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadJobs(); }
-    catch (e) { showToast('Delete failed: ' + e.message, 'error'); }
+    catch (e) { showToast(e.message, 'error'); }
   }
 
   /* ===== EMPLOYEES ===== */
@@ -802,17 +850,31 @@
     try {
       const list = await api('/api/employees/getAllEmployees');
       document.getElementById('employees-count').textContent = list.length;
-      const tbody = document.getElementById('employees-tbody');
+      const tb = document.getElementById('employees-tbody');
       if (!list.length) { renderEmpty('employees-tbody', 5, 'No employees yet.'); return; }
-      tbody.innerHTML = list.map(e => `
-        <tr>
-          <td>${e.id}</td>
-          <td>${esc(e.fullname)}</td>
-          <td>${esc(e.email)}</td>
-          <td>${esc(e.phoneNumber)}</td>
-          <td>${e.verified ? '<span class="badge">yes</span>' : 'no'}</td>
-        </tr>`).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('employees-tbody', 5, 'Error: ' + e.message); }
+      tb.innerHTML = list.map(e => `<tr><td>${e.id}</td><td>${esc(e.fullname)}</td><td>${esc(e.email)}</td><td>${esc(e.phoneNumber)}</td><td>${e.verified ? '<span class="badge success">yes</span>' : 'no'}</td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== CARS ===== */
+  async function loadCars() {
+    try {
+      const list = await api('/api/admin/cars');
+      document.getElementById('cars-count').textContent = list.length;
+      const tb = document.getElementById('cars-tbody');
+      if (!list.length) { renderEmpty('cars-tbody', 6, 'No cars in the fleet yet.'); return; }
+      tb.innerHTML = list.map(c => {
+        const brand = c.carBrand ? (c.carBrand.brandName || '-') : '-';
+        const model = c.carModel ? (c.carModel.modelName || '-') : '-';
+        const color = c.color ? (c.color.colorName || '-') : '-';
+        return `<tr><td>${c.id}</td><td>${esc(brand)}</td><td>${esc(model)}</td><td>${esc(color)}</td><td>${c.available ? '<span class="badge success">yes</span>' : '<span class="badge warning">no</span>'}</td><td><button class="btn-danger" onclick="deleteCar(${c.id})">Delete</button></td></tr>`;
+      }).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  async function deleteCar(id) {
+    if (!confirm('Delete car #' + id + '?')) return;
+    try { await api('/api/admin/cars/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadCars(); }
+    catch (e) { showToast(e.message, 'error'); }
   }
 
   /* ===== BRANDS ===== */
@@ -820,101 +882,211 @@
     try {
       const brands = await api('/api/carBrands/getAllCarBrands');
       document.getElementById('brands-count').textContent = brands.length;
-      const tbody = document.getElementById('brands-tbody');
+      const tb = document.getElementById('brands-tbody');
       if (!brands.length) { renderEmpty('brands-tbody', 2, 'No brands yet.'); return; }
-      tbody.innerHTML = brands.map(b => `
-        <tr>
-          <td>${esc(b)}</td>
-          <td><button class="btn-danger" onclick="deleteBrand('${esc(b)}')">Delete</button></td>
-        </tr>`).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('brands-tbody', 2, 'Error: ' + e.message); }
+      tb.innerHTML = brands.map(b => `<tr><td>${esc(b)}</td><td><button class="btn-danger" onclick="deleteBrand('${esc(b)}')">Delete</button></td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
   }
   async function addBrand(e) {
     e.preventDefault();
     const n = document.getElementById('brand-name');
     try {
       await api('/api/carBrands/addCarBrand?brandName=' + encodeURIComponent(n.value.trim()), { method: 'POST' });
-      showToast(`Added "${n.value.trim()}"`, 'success'); n.value = ''; loadBrands();
-    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+      showToast(`Added`, 'success'); n.value = ''; loadBrands();
+    } catch (e2) { showToast(e2.message, 'error'); }
   }
   async function deleteBrand(name) {
     if (!confirm('Delete brand "' + name + '"?')) return;
-    try {
-      await api('/api/carBrands/deleteCarBrandByName?brandName=' + encodeURIComponent(name), { method: 'DELETE' });
-      showToast('Deleted', 'success'); loadBrands();
-    } catch (e) { showToast('Delete failed: ' + e.message, 'error'); }
+    try { await api('/api/carBrands/deleteCarBrandByName?brandName=' + encodeURIComponent(name), { method: 'DELETE' }); showToast('Deleted', 'success'); loadBrands(); }
+    catch (e) { showToast(e.message, 'error'); }
   }
 
   /* ===== COLORS ===== */
   function looksLikeCssColor(name) {
-    const test = document.createElement('div').style;
-    test.color = '';
-    test.color = name;
-    return test.color !== '';
+    const t = document.createElement('div').style;
+    t.color = '';
+    t.color = name;
+    return t.color !== '';
   }
   async function loadColors() {
     try {
       const colors = await api('/api/colors/getAllColors');
       document.getElementById('colors-count').textContent = colors.length;
-      const tbody = document.getElementById('colors-tbody');
+      const tb = document.getElementById('colors-tbody');
       if (!colors.length) { renderEmpty('colors-tbody', 4, 'No colors yet.'); return; }
-      tbody.innerHTML = colors.map(c => {
+      tb.innerHTML = colors.map(c => {
         const safe = looksLikeCssColor(c.colorName) ? c.colorName : '#888';
-        return `<tr>
-          <td>${c.id}</td>
-          <td><span style="display:inline-block;width:22px;height:22px;border-radius:4px;background:${esc(safe)};border:1px solid var(--border);vertical-align:middle"></span></td>
-          <td>${esc(c.colorName)}</td>
-          <td><button class="btn-danger" onclick="deleteColor(${c.id}, '${esc(c.colorName)}')">Delete</button></td>
-        </tr>`;
+        return `<tr><td>${c.id}</td><td><span style="display:inline-block;width:22px;height:22px;border-radius:4px;background:${esc(safe)};border:1px solid var(--border);vertical-align:middle"></span></td><td>${esc(c.colorName)}</td><td><button class="btn-danger" onclick="deleteColor(${c.id}, '${esc(c.colorName)}')">Delete</button></td></tr>`;
       }).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('colors-tbody', 4, 'Error: ' + e.message); }
+    } catch (e) { showToast(e.message, 'error'); }
   }
   async function addColor(e) {
     e.preventDefault();
     const n = document.getElementById('color-name');
     try {
       const saved = await api('/api/colors/addColor?colorName=' + encodeURIComponent(n.value.trim()), { method: 'POST' });
-      showToast(`Added "${saved.colorName}" (id ${saved.id})`, 'success'); n.value = ''; loadColors();
-    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+      showToast(`Added "${saved.colorName}"`, 'success'); n.value = ''; loadColors();
+    } catch (e2) { showToast(e2.message, 'error'); }
   }
   async function deleteColor(id, name) {
     if (!confirm('Delete color "' + name + '"?')) return;
-    try {
-      await api('/api/colors/deleteColor?id=' + id + '&colorName=' + encodeURIComponent(name), { method: 'DELETE' });
-      showToast('Deleted', 'success'); loadColors();
-    } catch (e) { showToast('Delete failed: ' + e.message, 'error'); }
+    try { await api('/api/colors/deleteColor?id=' + id + '&colorName=' + encodeURIComponent(name), { method: 'DELETE' }); showToast('Deleted', 'success'); loadColors(); }
+    catch (e) { showToast(e.message, 'error'); }
   }
 
-  /* ===== COUNTRIES ===== */
+  /* ===== CAR TYPES ===== */
+  async function loadCarTypes() {
+    try {
+      const list = await api('/api/admin/car-types');
+      document.getElementById('car-types-count').textContent = list.length;
+      const tb = document.getElementById('car-types-tbody');
+      if (!list.length) { renderEmpty('car-types-tbody', 3, 'No body types yet.'); return; }
+      tb.innerHTML = list.map(t => `<tr><td>${t.id}</td><td>${esc(t.carType)}</td><td><button class="btn-danger" onclick="deleteCarType(${t.id})">Delete</button></td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  async function addCarType(e) {
+    e.preventDefault();
+    const n = document.getElementById('cartype-name');
+    try {
+      await api('/api/admin/car-types', { method: 'POST', body: { type: n.value.trim() } });
+      showToast('Added', 'success'); n.value = ''; loadCarTypes();
+    } catch (e2) { showToast(e2.message, 'error'); }
+  }
+  async function deleteCarType(id) {
+    if (!confirm('Delete body type #' + id + '?')) return;
+    try { await api('/api/admin/car-types/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadCarTypes(); }
+    catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== FUEL TYPES ===== */
+  async function loadFuelTypes() {
+    try {
+      const list = await api('/api/admin/fuel-types');
+      document.getElementById('fuel-types-count').textContent = list.length;
+      const tb = document.getElementById('fuel-types-tbody');
+      if (!list.length) { renderEmpty('fuel-types-tbody', 3, 'No fuel types yet.'); return; }
+      tb.innerHTML = list.map(t => `<tr><td>${t.id}</td><td>${esc(t.fuelType)}</td><td><button class="btn-danger" onclick="deleteFuelType(${t.id})">Delete</button></td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  async function addFuelType(e) {
+    e.preventDefault();
+    const n = document.getElementById('fuel-name');
+    try {
+      await api('/api/admin/fuel-types', { method: 'POST', body: { type: n.value.trim() } });
+      showToast('Added', 'success'); n.value = ''; loadFuelTypes();
+    } catch (e2) { showToast(e2.message, 'error'); }
+  }
+  async function deleteFuelType(id) {
+    if (!confirm('Delete fuel type #' + id + '?')) return;
+    try { await api('/api/admin/fuel-types/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadFuelTypes(); }
+    catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== TRANSMISSION TYPES ===== */
+  async function loadTransTypes() {
+    try {
+      const list = await api('/api/admin/transmission-types');
+      document.getElementById('trans-types-count').textContent = list.length;
+      const tb = document.getElementById('trans-types-tbody');
+      if (!list.length) { renderEmpty('trans-types-tbody', 3, 'No transmissions yet.'); return; }
+      tb.innerHTML = list.map(t => `<tr><td>${t.id}</td><td>${esc(t.transmissionType)}</td><td><button class="btn-danger" onclick="deleteTransType(${t.id})">Delete</button></td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  async function addTransType(e) {
+    e.preventDefault();
+    const n = document.getElementById('trans-name');
+    try {
+      await api('/api/admin/transmission-types', { method: 'POST', body: { type: n.value.trim() } });
+      showToast('Added', 'success'); n.value = ''; loadTransTypes();
+    } catch (e2) { showToast(e2.message, 'error'); }
+  }
+  async function deleteTransType(id) {
+    if (!confirm('Delete transmission #' + id + '?')) return;
+    try { await api('/api/admin/transmission-types/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadTransTypes(); }
+    catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== INSURANCES ===== */
+  async function loadInsurances() {
+    try {
+      const list = await api('/api/admin/insurances');
+      document.getElementById('ins-count').textContent = list.length;
+      const tb = document.getElementById('ins-tbody');
+      if (!list.length) { renderEmpty('ins-tbody', 4, 'No insurances yet.'); return; }
+      tb.innerHTML = list.map(i => `<tr><td>${i.id}</td><td>${i.insuranceYear}</td><td>${esc(i.insuranceCompany)}</td><td><button class="btn-danger" onclick="deleteInsurance(${i.id})">Delete</button></td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  async function addInsurance(e) {
+    e.preventDefault();
+    const y = document.getElementById('ins-year');
+    const c = document.getElementById('ins-company');
+    try {
+      await api('/api/admin/insurances', { method: 'POST', body: { year: parseInt(y.value), company: c.value.trim() } });
+      showToast('Added', 'success'); y.value = ''; c.value = ''; loadInsurances();
+    } catch (e2) { showToast(e2.message, 'error'); }
+  }
+  async function deleteInsurance(id) {
+    if (!confirm('Delete insurance #' + id + '?')) return;
+    try { await api('/api/admin/insurances/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadInsurances(); }
+    catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== PRICES ===== */
+  async function loadPrices() {
+    try {
+      const list = await api('/api/admin/prices');
+      document.getElementById('prices-count').textContent = list.length;
+      const tb = document.getElementById('prices-tbody');
+      if (!list.length) { renderEmpty('prices-tbody', 3, 'No prices yet.'); return; }
+      tb.innerHTML = list.map(p => `<tr><td>${p.id}</td><td>$${p.price}</td><td>${p.availableDiscount ? '<span class="badge success">yes</span>' : 'no'}</td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== DISCOUNTS ===== */
+  async function loadDiscounts() {
+    try {
+      const list = await api('/api/admin/discounts');
+      document.getElementById('disc-count').textContent = list.length;
+      const tb = document.getElementById('disc-tbody');
+      if (!list.length) { renderEmpty('disc-tbody', 5, 'No discounts yet.'); return; }
+      tb.innerHTML = list.map(d => `<tr><td>${d.id}</td><td><span class="badge purple">${d.discountRate}%</span></td><td>${esc(d.startDate || '-')}</td><td>${esc(d.endDate || '-')}</td><td><button class="btn-danger" onclick="deleteDiscount(${d.id})">Delete</button></td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+  async function addDiscount(e) {
+    e.preventDefault();
+    const r = document.getElementById('disc-rate');
+    const s = document.getElementById('disc-start');
+    const en = document.getElementById('disc-end');
+    try {
+      // datetime-local already gives ISO format like 2026-01-01T00:00
+      await api('/api/admin/discounts', { method: 'POST', body: { rate: parseInt(r.value), startDate: s.value, endDate: en.value } });
+      showToast('Added', 'success'); r.value = ''; s.value = ''; en.value = ''; loadDiscounts();
+    } catch (e2) { showToast(e2.message, 'error'); }
+  }
+  async function deleteDiscount(id) {
+    if (!confirm('Delete discount #' + id + '?')) return;
+    try { await api('/api/admin/discounts/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadDiscounts(); }
+    catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== COUNTRIES / CITIES / STREETS / BUILDINGS ===== */
   async function loadCountries() {
     try {
       const list = await api('/api/Country/getAll');
       document.getElementById('countries-count').textContent = list.length;
-      const tbody = document.getElementById('countries-tbody');
+      const tb = document.getElementById('countries-tbody');
       if (!list.length) { renderEmpty('countries-tbody', 3, 'No countries yet.'); return; }
-      tbody.innerHTML = list.map(c => `
-        <tr>
-          <td>${c.countryId || c.id || '?'}</td>
-          <td>${esc(c.countryName)}</td>
-          <td>${Array.isArray(c.cities) ? c.cities.length : (c.cityCount || 0)}</td>
-        </tr>`).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('countries-tbody', 3, 'Error: ' + e.message); }
+      tb.innerHTML = list.map(c => `<tr><td>${c.countryId || c.id || '?'}</td><td>${esc(c.countryName)}</td><td>${Array.isArray(c.cities) ? c.cities.length : (c.cityCount || 0)}</td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
   }
-
-  /* ===== CITIES ===== */
   async function loadCities() {
     try {
       const list = await api('/api/City/GetAllCities');
       document.getElementById('cities-count').textContent = list.length;
-      const tbody = document.getElementById('cities-tbody');
+      const tb = document.getElementById('cities-tbody');
       if (!list.length) { renderEmpty('cities-tbody', 3, 'No cities yet.'); return; }
-      tbody.innerHTML = list.map(c => `
-        <tr>
-          <td>${c.cityId || c.id || '?'}</td>
-          <td>${esc(c.cityName)}</td>
-          <td>${esc(c.country ? c.country.countryName : (c.countryName || '-'))}</td>
-        </tr>`).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('cities-tbody', 3, 'Error: ' + e.message); }
+      tb.innerHTML = list.map(c => `<tr><td>${c.cityId || c.id || '?'}</td><td>${esc(c.cityName)}</td><td>${esc(c.country ? c.country.countryName : (c.countryName || '-'))}</td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
   }
   async function addCity(e) {
     e.preventDefault();
@@ -922,26 +1094,19 @@
     const city = document.getElementById('city-name').value.trim();
     try {
       await api('/api/City/AddCity/' + encodeURIComponent(country), { method: 'POST', body: { cityName: city } });
-      showToast(`Added "${city}" under ${country}`, 'success');
+      showToast(`Added "${city}"`, 'success');
       document.getElementById('city-name').value = '';
       loadCities();
-    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+    } catch (e2) { showToast(e2.message, 'error'); }
   }
-
-  /* ===== STREETS ===== */
   async function loadStreets() {
     try {
       const list = await api('/api/Street/GetAllStreets');
       document.getElementById('streets-count').textContent = list.length;
-      const tbody = document.getElementById('streets-tbody');
+      const tb = document.getElementById('streets-tbody');
       if (!list.length) { renderEmpty('streets-tbody', 3, 'No streets yet.'); return; }
-      tbody.innerHTML = list.map(s => `
-        <tr>
-          <td>${s.streetId || s.id || '?'}</td>
-          <td>${esc(s.streetName)}</td>
-          <td>${esc(s.city ? s.city.cityName : (s.cityName || '-'))}</td>
-        </tr>`).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('streets-tbody', 3, 'Error: ' + e.message); }
+      tb.innerHTML = list.map(s => `<tr><td>${s.streetId || s.id || '?'}</td><td>${esc(s.streetName)}</td><td>${esc(s.city ? s.city.cityName : (s.cityName || '-'))}</td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
   }
   async function addStreet(e) {
     e.preventDefault();
@@ -949,29 +1114,22 @@
     const street = document.getElementById('street-name').value.trim();
     try {
       await api('/api/Street/AddStreet/' + encodeURIComponent(city), { method: 'POST', body: { streetName: street } });
-      showToast(`Added "${street}" under ${city}`, 'success');
+      showToast(`Added "${street}"`, 'success');
       document.getElementById('street-name').value = '';
       loadStreets();
-    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+    } catch (e2) { showToast(e2.message, 'error'); }
   }
-
-  /* ===== BUILDING NUMBERS ===== */
   async function loadBuildings() {
     try {
       const list = await api('/api/BuildingNumber/GetAllBuildingNumbers');
       document.getElementById('buildings-count').textContent = list.length;
-      const tbody = document.getElementById('buildings-tbody');
+      const tb = document.getElementById('buildings-tbody');
       if (!list.length) { renderEmpty('buildings-tbody', 3, 'No building numbers yet.'); return; }
-      tbody.innerHTML = list.map(b => `
-        <tr>
-          <td>${b.buildingNumberId || b.id || '?'}</td>
-          <td>${esc(b.buildingNo)}</td>
-          <td>${esc(b.street ? b.street.streetName : (b.streetName || '-'))}</td>
-        </tr>`).join('');
-    } catch (e) { showToast(e.message, 'error'); renderEmpty('buildings-tbody', 3, 'Error: ' + e.message); }
+      tb.innerHTML = list.map(b => `<tr><td>${b.buildingNumberId || b.id || '?'}</td><td>${esc(b.buildingNo)}</td><td>${esc(b.street ? b.street.streetName : (b.streetName || '-'))}</td></tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); }
   }
 
-  /* ===== BOOTSTRAP ===== */
+  /* ===== INIT ===== */
   window.addEventListener('DOMContentLoaded', () => {
     showSection(location.hash.slice(1) || 'dashboard');
   });
