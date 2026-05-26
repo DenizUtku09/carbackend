@@ -17,6 +17,8 @@ public class SecurityConfiguration {
             "/",
             "/index.html",
             "/marketplace.html",
+            "/ayaz.html",
+            "/renter.html",
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
@@ -30,7 +32,10 @@ public class SecurityConfiguration {
             "/api/auth/login",
             // User-uploaded images are public; uploading itself (/api/media/**)
             // still requires authentication.
-            "/uploads/**"
+            "/uploads/**",
+            // Public listing browse / view / contact — anyone can read or send
+            // a message. /api/renter/** stays protected.
+            "/api/listings/**"
     };
 
     @Bean

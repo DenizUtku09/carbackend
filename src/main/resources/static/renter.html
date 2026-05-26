@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayaz · Renter Panel</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-soft: #475569;
+      --muted: #94a3b8;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --primary: #5b3df5;
+      --primary-dark: #4530c4;
+      --primary-soft: #ede9fe;
+      --accent: #06b6d4;
+      --accent-soft: #cffafe;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --shadow-sm: 0 1px 2px rgba(15,23,42,.05);
+      --shadow: 0 2px 4px rgba(15,23,42,.06), 0 8px 24px rgba(15,23,42,.05);
+      --shadow-lg: 0 8px 16px rgba(15,23,42,.08), 0 24px 48px rgba(15,23,42,.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; }
+    input, select, textarea { font-family: inherit; font-size: 14px; }
+    code { font-family: "JetBrains Mono", "Fira Code", Consolas, monospace; font-size: 12px; background: var(--bg); padding: 1px 6px; border-radius: 3px; }
+
+    /* APP LAYOUT */
+    .app {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    aside.sidebar {
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+    .brand {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.4px;
+    }
+    .brand-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+      display: grid; place-items: center;
+      color: white;
+    }
+    .brand-mark svg { width: 18px; height: 18px; }
+    .brand-sub {
+      display: block; font-size: 9px; color: var(--muted);
+      letter-spacing: 1.2px; text-transform: uppercase; margin-top: -2px; font-weight: 600;
+    }
+    nav.side-nav { flex: 1; padding: 14px 10px; }
+    .nav-link {
+      display: flex; align-items: center; gap: 11px;
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; color: var(--text-soft);
+      cursor: pointer; margin-bottom: 2px;
+      transition: all 0.15s;
+    }
+    .nav-link:hover { background: var(--bg); color: var(--text); }
+    .nav-link.active { background: var(--primary-soft); color: var(--primary-dark); font-weight: 600; }
+    .nav-link svg { width: 17px; height: 17px; flex-shrink: 0; }
+    .nav-link .pill {
+      margin-left: auto;
+      font-size: 11px; font-weight: 600;
+      padding: 1px 7px; border-radius: 10px;
+      background: var(--primary); color: white;
+    }
+    .sidebar-footer {
+      padding: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .user-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px;
+      border-radius: 8px;
+      background: var(--bg);
+      cursor: pointer;
+    }
+    .user-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      display: grid; place-items: center;
+      font-weight: 700; font-size: 12px;
+      flex-shrink: 0;
+    }
+    .user-name { font-size: 13px; font-weight: 600; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .user-email { font-size: 11px; color: var(--muted); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .signout-btn {
+      width: 100%; margin-top: 8px;
+      background: transparent; color: var(--text-soft);
+      border: 1px solid var(--border);
+      padding: 7px; border-radius: 6px;
+      font-size: 12px; font-weight: 500;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .signout-btn:hover { background: var(--bg); color: var(--danger); border-color: var(--danger); }
+    .signout-btn svg { width: 13px; height: 13px; }
+
+    /* MAIN */
+    main {
+      padding: 32px 40px;
+      max-width: 1280px;
+      width: 100%;
+    }
+    .page-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .page-head h1 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -0.6px; }
+    .page-head .subtitle { color: var(--text-soft); font-size: 14px; margin-top: 2px; }
+    section[data-route] { display: none; }
+    section[data-route].active { display: block; animation: fadeIn 0.2s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    /* BUTTONS */
+    .btn {
+      background: var(--primary); color: white;
+      border: 1px solid var(--primary);
+      padding: 10px 18px; border-radius: 8px;
+      font-size: 13px; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn svg { width: 15px; height: 15px; }
+    .btn.btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border-strong); }
+    .btn.btn-secondary:hover { background: var(--bg); border-color: var(--text-soft); }
+    .btn.btn-ghost { background: transparent; color: var(--text-soft); border-color: var(--border); }
+    .btn.btn-ghost:hover { background: var(--bg); color: var(--text); }
+    .btn.btn-danger { background: transparent; color: var(--danger); border-color: transparent; padding: 5px 11px; font-size: 12px; }
+    .btn.btn-danger:hover { background: rgba(239,68,68,0.08); border-color: var(--danger); }
+    .btn.btn-sm { padding: 7px 14px; font-size: 13px; }
+
+    /* CARDS */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .card-head { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .card-head h2 { margin: 0; font-size: 15px; font-weight: 700; }
+    .card-body { padding: 18px 20px; }
+
+    /* STAT TILES */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .stat:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .stat::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-grad, linear-gradient(90deg, var(--primary), var(--accent))); }
+    .stat[data-tone="listings"]::before { background: linear-gradient(90deg, var(--primary), #ec4899); }
+    .stat[data-tone="views"]::before    { background: linear-gradient(90deg, var(--accent), var(--primary)); }
+    .stat[data-tone="messages"]::before { background: linear-gradient(90deg, var(--success), var(--accent)); }
+    .stat[data-tone="avg"]::before      { background: linear-gradient(90deg, var(--warning), #ec4899); }
+    .stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text-soft); font-weight: 700; margin-bottom: 10px; }
+    .stat .value { font-size: 34px; font-weight: 800; letter-spacing: -1.2px; line-height: 1; }
+    .stat .sub { font-size: 12px; color: var(--muted); margin-top: 6px; }
+    .stat .sub .accent { color: var(--success); font-weight: 600; }
+
+    /* TOP LISTINGS LIST */
+    .top-list { display: flex; flex-direction: column; gap: 8px; }
+    .top-row {
+      display: grid;
+      grid-template-columns: 30px 1fr 120px 60px;
+      gap: 14px;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 13px;
+    }
+    .top-row .rank {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700; font-size: 12px;
+      display: grid; place-items: center;
+    }
+    .top-row .title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .top-row .bar-track { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .top-row .bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 3px; }
+    .top-row .views { text-align: right; font-weight: 700; color: var(--primary); }
+
+    /* TABLES */
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    th { color: var(--text-soft); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; background: var(--bg); }
+    tbody tr:hover { background: var(--bg); }
+    .empty { text-align: center; color: var(--muted); padding: 40px 20px; font-style: italic; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .badge.purple { background: var(--primary-soft); color: var(--primary-dark); }
+    .badge.cyan { background: var(--accent-soft); color: #0e7490; }
+    .badge.success { background: #d1fae5; color: #065f46; }
+    .badge.warning { background: #fef3c7; color: #92400e; }
+    .badge.danger { background: #fee2e2; color: #991b1b; }
+
+    /* LISTING CARDS GRID */
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .listing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      flex-direction: column;
+    }
+    .listing-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .listing-card .cover {
+      aspect-ratio: 16/10;
+      background: linear-gradient(135deg, var(--primary-soft), var(--accent-soft));
+      position: relative;
+      display: grid; place-items: center;
+    }
+    .listing-card .cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .listing-card .cover .placeholder svg { width: 50px; height: 50px; color: var(--primary); opacity: 0.4; }
+    .listing-card .cover .views-pill {
+      position: absolute; top: 10px; left: 10px;
+      background: rgba(15,23,42,0.85); color: white;
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 11px; font-weight: 600;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .listing-card .cover .views-pill svg { width: 12px; height: 12px; }
+    .listing-card .cover .photo-count {
+      position: absolute; bottom: 10px; right: 10px;
+      background: rgba(15,23,42,0.85); color: white;
+      padding: 3px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 600;
+    }
+    .listing-card .body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+    .listing-card .title { font-size: 15px; font-weight: 700; margin: 0 0 4px; line-height: 1.3; }
+    .listing-card .meta { font-size: 12px; color: var(--text-soft); margin-bottom: 8px; }
+    .listing-card .price { font-size: 18px; font-weight: 800; color: var(--primary); }
+    .listing-card .price small { font-size: 12px; font-weight: 500; color: var(--text-soft); }
+    .listing-card .footer-row { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+
+    /* MESSAGES */
+    .msg-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; }
+    .msg-card:hover { border-color: var(--border-strong); }
+    .msg-card.unread { border-left: 4px solid var(--primary); background: linear-gradient(90deg, var(--primary-soft) 0%, var(--surface) 30%); }
+    .msg-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 8px; }
+    .msg-from { font-weight: 700; font-size: 14px; }
+    .msg-from .contact { font-weight: 400; color: var(--text-soft); margin-left: 6px; font-size: 12px; }
+    .msg-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .msg-listing { font-size: 12px; color: var(--primary); font-weight: 600; margin-bottom: 6px; }
+    .msg-body { font-size: 14px; color: var(--text); line-height: 1.55; white-space: pre-wrap; }
+
+    /* MODALS */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(15,23,42,0.7);
+      display: none;
+      align-items: center; justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; animation: fadeIn 0.15s; }
+    .modal {
+      background: var(--surface);
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      max-width: 540px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 30px;
+      position: relative;
+    }
+    .modal.wide { max-width: 700px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 22px; color: var(--text-soft); width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; }
+    .modal-close:hover { background: var(--bg); color: var(--text); }
+    .modal h2 { font-size: 22px; font-weight: 800; margin: 0 0 6px; letter-spacing: -0.4px; }
+    .modal .sub { color: var(--text-soft); font-size: 14px; margin: 0 0 22px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-grid .full { grid-column: 1 / -1; }
+    .field { margin-bottom: 0; }
+    .field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-soft); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-strong);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .field textarea { resize: vertical; min-height: 90px; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+    .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+    .auth-error { background: #fef2f2; color: #b91c1c; padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 14px; display: none; }
+    .auth-error.show { display: block; }
+    .auth-swap { text-align: center; font-size: 13px; color: var(--text-soft); margin-top: 16px; }
+    .auth-swap a { color: var(--primary); font-weight: 600; cursor: pointer; }
+    .auth-swap a:hover { text-decoration: underline; }
+
+    /* PHOTO UPLOADER (shared with marketplace) */
+    .photo-drop {
+      border: 2px dashed var(--border-strong);
+      padding: 22px; text-align: center;
+      border-radius: 8px;
+      cursor: pointer; transition: all 0.15s;
+      background: var(--bg);
+    }
+    .photo-drop:hover, .photo-drop.dragging { border-color: var(--primary); background: var(--primary-soft); }
+    .photo-drop svg { width: 28px; height: 28px; color: var(--text-soft); display: block; margin: 0 auto 8px; }
+    .photo-drop strong { color: var(--text); font-size: 14px; font-weight: 600; }
+    .photo-drop .hint { display: block; font-size: 12px; color: var(--text-soft); margin-top: 4px; }
+    .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: 6px; margin-top: 10px; }
+    .photo-thumb { aspect-ratio: 1; background: var(--bg); border-radius: 6px; overflow: hidden; position: relative; border: 1px solid var(--border); }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-thumb.cover { border: 2px solid var(--primary); }
+    .photo-thumb.cover::after { content: "Cover"; position: absolute; bottom: 4px; left: 4px; background: var(--primary); color: white; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; }
+    .photo-thumb .remove {
+      position: absolute; top: 4px; right: 4px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(15,23,42,0.85); color: white; border: none; cursor: pointer;
+      font-size: 14px; display: grid; place-items: center; padding: 0; line-height: 1;
+    }
+    .photo-thumb .remove:hover { background: var(--danger); }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: white; padding: 14px 22px; border-radius: 8px; box-shadow: var(--shadow-lg); opacity: 0; transform: translateY(20px); transition: 0.25s; z-index: 200; pointer-events: none; max-width: 360px; font-size: 14px; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--success); }
+    .toast.error { background: var(--danger); }
+
+    /* APP HIDDEN STATE (during login screen) */
+    .app.gated { filter: blur(3px); pointer-events: none; user-select: none; }
+    .gate-backdrop {
+      position: fixed; inset: 0; background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: none; align-items: center; justify-content: center; z-index: 50;
+    }
+    .gate-backdrop.show { display: flex; }
+    .gate-card {
+      background: var(--surface); border-radius: 16px;
+      max-width: 420px; width: calc(100% - 32px);
+      padding: 36px;
+      box-shadow: 0 20px 80px rgba(15,23,42,.4);
+    }
+    .gate-brand { text-align: center; margin-bottom: 24px; }
+    .gate-brand h1 { font-size: 22px; font-weight: 800; margin: 12px 0 4px; letter-spacing: -0.4px; }
+    .gate-brand p { font-size: 13px; color: var(--text-soft); margin: 0; }
+    .gate-card .brand-mark { width: 48px; height: 48px; border-radius: 12px; margin: 0 auto; }
+    .gate-card .brand-mark svg { width: 26px; height: 26px; }
+
+    @media (max-width: 760px) {
+      .app { grid-template-columns: 1fr; }
+      aside.sidebar { position: static; height: auto; }
+      main { padding: 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN GATE (covers app when not authenticated) -->
+<div class="gate-backdrop" id="gate">
+  <div class="gate-card">
+    <div class="gate-brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+          <circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>
+        </svg>
+      </span>
+      <h1 id="gate-title">Renter sign in</h1>
+      <p id="gate-sub">Welcome back. Sign in to manage your fleet.</p>
+    </div>
+    <div class="auth-error" id="gate-error"></div>
+    <form id="gate-login-form" onsubmit="submitLogin(event)">
+      <div class="field" style="margin-bottom: 14px"><label>Email</label><input id="g-login-email" type="email" autocomplete="email" placeholder="you@company.com" required></div>
+      <div class="field" style="margin-bottom: 16px"><label>Password</label><input id="g-login-password" type="password" autocomplete="current-password" placeholder="Your password" required minlength="6"></div>
+      <button type="submit" class="btn" style="width: 100%; justify-content: center; padding: 11px">Sign in</button>
+      <p class="auth-swap">Don't have an account yet? <a onclick="toggleGate('register')">Create one</a> · <a href="/ayaz.html">Back to Ayaz.app</a></p>
+    </form>
+    <form id="gate-register-form" onsubmit="submitRegister(event)" style="display:none">
+      <div class="field" style="margin-bottom: 14px"><label>Company / your name</label><input id="g-reg-name" type="text" autocomplete="organization" placeholder="İstanbul Premium Rent" required></div>
+      <div class="field" style="margin-bottom: 14px"><label>Email</label><input id="g-reg-email" type="email" autocomplete="email" placeholder="you@company.com" required></div>
+      <div class="field" style="margin-bottom: 16px"><label>Password</label><input id="g-reg-password" type="password" autocomplete="new-password" placeholder="At least 6 characters" required minlength="6"></div>
+      <button type="submit" class="btn" style="width: 100%; justify-content: center; padding: 11px">Create account</button>
+      <p class="auth-swap">Already have an account? <a onclick="toggleGate('login')">Sign in</a> · <a href="/ayaz.html">Back to Ayaz.app</a></p>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+          <circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/>
+        </svg>
+      </span>
+      <span>Ayaz<br><span class="brand-sub">Renter Panel</span></span>
+    </div>
+
+    <nav class="side-nav" id="nav">
+      <div class="nav-link" data-section="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-link" data-section="listings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        My ilanlar
+      </div>
+      <div class="nav-link" data-section="messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Messages
+        <span class="pill" id="msg-pill" style="display:none">0</span>
+      </div>
+      <div class="nav-link" data-section="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-row" onclick="showSection('settings')">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div style="overflow: hidden">
+          <div class="user-name" id="user-name">User</div>
+          <div class="user-email" id="user-email">user@example.com</div>
+        </div>
+      </div>
+      <button class="signout-btn" onclick="signOut()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section data-route="dashboard">
+      <div class="page-head">
+        <div>
+          <h1>Dashboard</h1>
+          <div class="subtitle">Your fleet at a glance</div>
+        </div>
+        <button class="btn btn-secondary" onclick="loadStats()">Refresh</button>
+      </div>
+      <div class="stat-grid" id="stat-grid"></div>
+      <div class="card">
+        <div class="card-head">
+          <h2>Top viewed listings</h2>
+          <span class="badge purple" id="top-count">0</span>
+        </div>
+        <div class="card-body">
+          <div class="top-list" id="top-listings"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTINGS -->
+    <section data-route="listings">
+      <div class="page-head">
+        <div>
+          <h1>My ilanlar</h1>
+          <div class="subtitle">All listings published from your account</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary" onclick="loadListings()">Refresh</button>
+          <button class="btn" onclick="openListingModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New ilan
+          </button>
+        </div>
+      </div>
+      <div id="listings-grid" class="listings-grid">
+        <div style="grid-column: 1/-1" class="empty">Loading…</div>
+      </div>
+    </section>
+
+    <!-- MESSAGES -->
+    <section data-route="messages">
+      <div class="page-head">
+        <div>
+          <h1>Messages</h1>
+          <div class="subtitle">Inquiries from customers about your listings</div>
+        </div>
+        <button class="btn btn-secondary" onclick="loadMessages()">Refresh</button>
+      </div>
+      <div id="messages-list">
+        <div class="empty">Loading…</div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section data-route="settings">
+      <div class="page-head">
+        <div>
+          <h1>Settings</h1>
+          <div class="subtitle">Your account details</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Account</h2></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="field"><label>Display name</label><input id="set-name" type="text" disabled></div>
+            <div class="field"><label>Email</label><input id="set-email" type="email" disabled></div>
+            <div class="field full"><label>Account ID</label><input id="set-id" type="text" disabled></div>
+            <div class="field full"><label>Member since</label><input id="set-created" type="text" disabled></div>
+          </div>
+          <p style="font-size: 12px; color: var(--muted); margin-top: 14px;">
+            Editing account details isn't wired yet — coming in a future release. For now you'd need to register a new account to change email/name.
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Quick links</h2></div>
+        <div class="card-body" style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <a href="/ayaz.html"><button class="btn btn-secondary btn-sm">Marketing site</button></a>
+          <a href="/marketplace.html" target="_blank"><button class="btn btn-secondary btn-sm">Public marketplace ↗</button></a>
+          <a href="/admin.html" target="_blank"><button class="btn btn-secondary btn-sm">Admin panel ↗</button></a>
+          <a href="/swagger-ui/index.html" target="_blank"><button class="btn btn-secondary btn-sm">API docs ↗</button></a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- LISTING MODAL -->
+<div class="modal-backdrop" id="listing-modal" onclick="closeModal(event, 'listing-modal')">
+  <div class="modal wide" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal(null, 'listing-modal')">×</button>
+    <h2>New ilan</h2>
+    <p class="sub">Publish a vehicle to the public marketplace. Customers can browse it and message you.</p>
+    <form id="listing-form" onsubmit="submitListing(event)">
+      <div class="form-grid">
+        <div class="field full"><label>Listing title *</label><input id="l-title" type="text" placeholder="e.g. 2022 BMW 320i — clean, single owner" required></div>
+        <div class="field"><label>Brand</label><input id="l-brand" type="text" placeholder="BMW" required></div>
+        <div class="field"><label>Model</label><input id="l-model" type="text" placeholder="320i" required></div>
+        <div class="field"><label>Year</label><input id="l-year" type="number" min="1990" max="2030" placeholder="2022"></div>
+        <div class="field"><label>Kilometers</label><input id="l-km" type="number" min="0" placeholder="35000"></div>
+        <div class="field"><label>Price per day (₺) *</label><input id="l-price" type="number" min="0" placeholder="800" required></div>
+        <div class="field"><label>City</label><input id="l-city" type="text" placeholder="İstanbul"></div>
+        <div class="field"><label>Color</label><input id="l-color" type="text" placeholder="Black"></div>
+        <div class="field"><label>Seats</label><input id="l-seats" type="number" min="2" max="9" placeholder="5"></div>
+        <div class="field"><label>Transmission</label><select id="l-trans"><option>Automatic</option><option>Manual</option></select></div>
+        <div class="field"><label>Fuel</label><select id="l-fuel"><option>Petrol</option><option>Diesel</option><option>Hybrid</option><option>Electric</option></select></div>
+        <div class="field full"><label>Description</label><textarea id="l-desc" placeholder="Service history, condition, anything customers should know…"></textarea></div>
+        <div class="field full">
+          <label>Photos (up to 8)</label>
+          <input id="l-photos-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple style="display: none">
+          <div id="l-photo-drop" class="photo-drop" onclick="document.getElementById('l-photos-input').click()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <strong>Click to add photos</strong> or drag and drop
+            <span class="hint">JPG, PNG, WEBP up to 5 MB · first photo becomes the cover</span>
+          </div>
+          <div id="l-photo-previews" class="photo-grid"></div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" onclick="closeModal(null, 'listing-modal')">Cancel</button>
+        <button type="submit" class="btn" id="listing-submit">Publish ilan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MESSAGE DETAIL MODAL -->
+<div class="modal-backdrop" id="message-modal" onclick="closeModal(event, 'message-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal(null, 'message-modal')">×</button>
+    <div id="message-modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ===== AUTH ===== */
+  const TOKEN_KEY = 'ayaz_renter_token';
+  const USER_KEY = 'ayaz_renter_user';
+  let currentUser = null;
+
+  function getToken() { return localStorage.getItem(TOKEN_KEY); }
+  function setAuth(token, user) {
+    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    currentUser = user;
+    applyAuth();
+  }
+  function clearAuth() {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    currentUser = null;
+    applyAuth();
+  }
+  function applyAuth() {
+    const signedIn = !!currentUser;
+    document.getElementById('app').classList.toggle('gated', !signedIn);
+    document.getElementById('gate').classList.toggle('show', !signedIn);
+    if (signedIn) {
+      const name = currentUser.fullName || currentUser.email;
+      document.getElementById('user-name').textContent = name;
+      document.getElementById('user-email').textContent = currentUser.email;
+      const initials = (currentUser.fullName || currentUser.email).split(/\s+|@/).filter(Boolean).map(w => w[0]).slice(0,2).join('').toUpperCase();
+      document.getElementById('user-avatar').textContent = initials || 'U';
+    }
+  }
+
+  function toggleGate(view) {
+    document.getElementById('gate-login-form').style.display = view === 'login' ? '' : 'none';
+    document.getElementById('gate-register-form').style.display = view === 'register' ? '' : 'none';
+    document.getElementById('gate-title').textContent = view === 'login' ? 'Renter sign in' : 'Create your account';
+    document.getElementById('gate-sub').textContent = view === 'login' ? 'Welcome back. Sign in to manage your fleet.' : 'Free 14-day trial. No credit card required.';
+    document.getElementById('gate-error').classList.remove('show');
+  }
+
+  async function submitLogin(e) {
+    e.preventDefault();
+    const err = document.getElementById('gate-error');
+    err.classList.remove('show');
+    try {
+      const r = await fetch('/api/auth/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: document.getElementById('g-login-email').value.trim(),
+          password: document.getElementById('g-login-password').value
+        })
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        throw new Error(extractError(t) || (r.status === 401 ? 'Invalid email or password.' : 'Login failed.'));
+      }
+      const data = await r.json();
+      setAuth(data.token, data.user);
+      showToast(`Welcome back, ${currentUser.fullName || currentUser.email}`, 'success');
+      showSection('dashboard');
+    } catch (e2) {
+      err.textContent = e2.message;
+      err.classList.add('show');
+    }
+  }
+  async function submitRegister(e) {
+    e.preventDefault();
+    const err = document.getElementById('gate-error');
+    err.classList.remove('show');
+    try {
+      const r = await fetch('/api/auth/register', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: document.getElementById('g-reg-name').value.trim(),
+          email: document.getElementById('g-reg-email').value.trim(),
+          password: document.getElementById('g-reg-password').value
+        })
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        throw new Error(extractError(t) || 'Registration failed.');
+      }
+      const data = await r.json();
+      setAuth(data.token, data.user);
+      showToast(`Welcome, ${currentUser.fullName}! Your account is ready.`, 'success');
+      showSection('dashboard');
+    } catch (e2) {
+      err.textContent = e2.message;
+      err.classList.add('show');
+    }
+  }
+  function extractError(t) { try { const j = JSON.parse(t); return j.message || j.error || null; } catch (e) { return null; } }
+  function signOut() {
+    clearAuth();
+    showToast('Signed out.');
+  }
+
+  /* ===== FETCH ===== */
+  async function api(path, opts) {
+    opts = opts || {};
+    const token = getToken();
+    opts.headers = Object.assign({}, opts.headers, {
+      'Accept': 'application/json',
+      ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+    });
+    if (opts.body && typeof opts.body === 'object' && !(opts.body instanceof FormData)) {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(opts.body);
+    }
+    const r = await fetch(path, opts);
+    if (r.status === 401) { clearAuth(); throw new Error('Session expired. Please sign in again.'); }
+    if (!r.ok) {
+      const txt = await r.text();
+      throw new Error(extractError(txt) || (r.status + ' ' + r.statusText));
+    }
+    const ct = r.headers.get('content-type') || '';
+    if (r.status === 204 || !ct) return null;
+    return ct.includes('json') ? r.json() : r.text();
+  }
+
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+  function showToast(msg, kind) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (kind || '');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+  function timeAgo(iso) {
+    if (!iso) return '';
+    const ms = Date.now() - new Date(iso).getTime();
+    if (ms < 60 * 1000) return 'just now';
+    if (ms < 3600 * 1000) return Math.floor(ms / 60000) + ' min ago';
+    if (ms < 86400 * 1000) return Math.floor(ms / 3600000) + ' hr ago';
+    if (ms < 7 * 86400 * 1000) return Math.floor(ms / 86400000) + ' day' + (Math.floor(ms / 86400000) === 1 ? '' : 's') + ' ago';
+    return new Date(iso).toLocaleDateString();
+  }
+
+  /* ===== ROUTING ===== */
+  const loaders = {
+    dashboard: loadStats,
+    listings: loadListings,
+    messages: loadMessages,
+    settings: loadSettings
+  };
+  function showSection(name) {
+    if (!loaders[name]) name = 'dashboard';
+    document.querySelectorAll('section[data-route]').forEach(s => s.classList.toggle('active', s.dataset.route === name));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.section === name));
+    if (location.hash.slice(1) !== name) location.hash = name;
+    if (currentUser) { try { loaders[name](); } catch (e) { console.error(e); } }
+  }
+  document.getElementById('nav').addEventListener('click', e => {
+    const link = e.target.closest('.nav-link');
+    if (link) showSection(link.dataset.section);
+  });
+  window.addEventListener('hashchange', () => showSection(location.hash.slice(1) || 'dashboard'));
+
+  /* ===== DASHBOARD STATS ===== */
+  async function loadStats() {
+    try {
+      const s = await api('/api/renter/stats');
+      const tiles = [
+        { tone: 'listings', label: 'Active ilanlar', value: s.activeListings, sub: 'in your fleet' },
+        { tone: 'views',    label: 'Total views',    value: s.totalViews,     sub: 'across all listings' },
+        { tone: 'messages', label: 'Unread messages',value: s.unreadMessages, sub: `${s.totalMessages} total` },
+        { tone: 'avg',      label: 'Avg views / ilan', value: s.avgViewsPerListing.toFixed(1), sub: 'higher is better' }
+      ];
+      document.getElementById('stat-grid').innerHTML = tiles.map(t => `
+        <div class="stat" data-tone="${t.tone}">
+          <div class="label">${esc(t.label)}</div>
+          <div class="value">${t.value}</div>
+          <div class="sub">${esc(t.sub)}</div>
+        </div>`).join('');
+
+      // unread pill in sidebar
+      const pill = document.getElementById('msg-pill');
+      if (s.unreadMessages > 0) { pill.textContent = s.unreadMessages; pill.style.display = ''; } else { pill.style.display = 'none'; }
+
+      // top listings
+      const top = s.topListings || [];
+      const tl = document.getElementById('top-listings');
+      document.getElementById('top-count').textContent = top.length;
+      if (!top.length) {
+        tl.innerHTML = '<div class="empty">No listings yet. Add one from "My ilanlar".</div>';
+      } else {
+        const max = Math.max(1, ...top.map(t => t.viewCount));
+        tl.innerHTML = top.map((t, i) => `
+          <div class="top-row">
+            <div class="rank">${i + 1}</div>
+            <div class="title">${esc(t.title)}</div>
+            <div class="bar-track"><div class="bar-fill" style="width: ${(t.viewCount / max * 100).toFixed(0)}%"></div></div>
+            <div class="views">${t.viewCount}</div>
+          </div>`).join('');
+      }
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== LISTINGS ===== */
+  let selectedPhotos = [];
+  function setupPhotoUploader() {
+    const input = document.getElementById('l-photos-input');
+    const drop = document.getElementById('l-photo-drop');
+    input.addEventListener('change', e => { addPhotos(Array.from(e.target.files)); e.target.value = ''; });
+    ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('dragging'); }));
+    ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('dragging'); }));
+    drop.addEventListener('drop', e => {
+      const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+      if (!files.length) { showToast('Only image files', 'error'); return; }
+      addPhotos(files);
+    });
+  }
+  function addPhotos(files) {
+    for (const f of files) {
+      if (selectedPhotos.length >= 8) { showToast('Max 8 photos', 'error'); break; }
+      if (f.size > 5 * 1024 * 1024) { showToast(`"${f.name}" is over 5 MB`, 'error'); continue; }
+      selectedPhotos.push(f);
+    }
+    renderPreviews();
+  }
+  function renderPreviews() {
+    const c = document.getElementById('l-photo-previews');
+    if (!selectedPhotos.length) { c.innerHTML = ''; return; }
+    c.innerHTML = selectedPhotos.map((f, i) => `
+      <div class="photo-thumb ${i === 0 ? 'cover' : ''}">
+        <img src="${URL.createObjectURL(f)}" alt="">
+        <button type="button" class="remove" onclick="removePhoto(${i})">×</button>
+      </div>`).join('');
+  }
+  function removePhoto(idx) { selectedPhotos.splice(idx, 1); renderPreviews(); }
+  async function uploadPhotos() {
+    if (!selectedPhotos.length) return [];
+    const fd = new FormData();
+    for (const f of selectedPhotos) fd.append('files', f);
+    const data = await api('/api/media/photos', { method: 'POST', body: fd });
+    return data.urls || [];
+  }
+
+  function openListingModal() {
+    document.getElementById('listing-form').reset();
+    selectedPhotos = [];
+    renderPreviews();
+    document.getElementById('listing-modal').classList.add('show');
+    setTimeout(() => document.getElementById('l-title').focus(), 50);
+  }
+  function closeModal(event, id) {
+    if (event && event.target.closest('.modal')) return;
+    document.getElementById(id).classList.remove('show');
+  }
+
+  async function submitListing(e) {
+    e.preventDefault();
+    const btn = document.getElementById('listing-submit');
+    btn.disabled = true;
+    btn.textContent = 'Publishing…';
+    try {
+      const photoUrls = await uploadPhotos();
+      const body = {
+        title: document.getElementById('l-title').value.trim(),
+        brand: document.getElementById('l-brand').value.trim(),
+        model: document.getElementById('l-model').value.trim(),
+        year: parseInt(document.getElementById('l-year').value) || null,
+        km: parseInt(document.getElementById('l-km').value) || null,
+        pricePerDay: parseInt(document.getElementById('l-price').value),
+        color: document.getElementById('l-color').value.trim(),
+        city: document.getElementById('l-city').value.trim(),
+        transmission: document.getElementById('l-trans').value,
+        fuel: document.getElementById('l-fuel').value,
+        seats: parseInt(document.getElementById('l-seats').value) || null,
+        description: document.getElementById('l-desc').value.trim(),
+        photoUrls: photoUrls
+      };
+      const saved = await api('/api/renter/listings', { method: 'POST', body });
+      showToast(`İlan "${saved.title}" yayında!`, 'success');
+      closeModal(null, 'listing-modal');
+      loadListings();
+      // Also refresh stats if we're showing them
+      loadStats();
+    } catch (e2) {
+      showToast(e2.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Publish ilan';
+    }
+  }
+
+  async function loadListings() {
+    try {
+      const list = await api('/api/renter/listings');
+      const grid = document.getElementById('listings-grid');
+      if (!list.length) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: white; border: 1px dashed var(--border); border-radius: 12px;">
+          <div style="font-weight: 600; margin-bottom: 8px;">No listings yet</div>
+          <div style="color: var(--text-soft); font-size: 14px; margin-bottom: 16px;">Click "New ilan" to publish your first vehicle.</div>
+        </div>`;
+        return;
+      }
+      grid.innerHTML = list.map(l => {
+        const cover = (l.photoUrls && l.photoUrls.length) ? l.photoUrls[0] : null;
+        const photoCount = l.photoUrls ? l.photoUrls.length : 0;
+        return `
+          <div class="listing-card">
+            <div class="cover">
+              ${cover ? `<img src="${esc(cover)}" alt="">` : `<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
+              <div class="views-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                ${l.viewCount}
+              </div>
+              ${photoCount > 1 ? `<div class="photo-count">${photoCount} photos</div>` : ''}
+            </div>
+            <div class="body">
+              <div class="title">${esc(l.title)}</div>
+              <div class="meta">${esc(l.brand || '')} ${esc(l.model || '')} · ${l.year || '—'} · ${(l.km || 0).toLocaleString()} km</div>
+              <div class="price">₺${l.pricePerDay || 0}<small> / day</small></div>
+              <div class="footer-row">
+                <span style="font-size: 12px; color: var(--text-soft);">${esc(l.city || '—')}</span>
+                <button class="btn btn-danger" onclick="deleteListing(${l.id}, '${esc(l.title)}')">Delete</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+
+  async function deleteListing(id, title) {
+    if (!confirm(`Delete "${title}"? This is permanent.`)) return;
+    try { await api('/api/renter/listings/' + id, { method: 'DELETE' }); showToast('Listing deleted', 'success'); loadListings(); loadStats(); }
+    catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== MESSAGES ===== */
+  async function loadMessages() {
+    try {
+      const list = await api('/api/renter/messages');
+      const c = document.getElementById('messages-list');
+      if (!list.length) {
+        c.innerHTML = `<div style="text-align: center; padding: 60px 20px; background: white; border: 1px dashed var(--border); border-radius: 12px;">
+          <div style="font-weight: 600; margin-bottom: 8px;">Inbox is empty</div>
+          <div style="color: var(--text-soft); font-size: 14px;">Once customers message your listings, they show up here.</div>
+        </div>`;
+        return;
+      }
+      c.innerHTML = list.map(m => {
+        const unread = m.readAt == null;
+        return `
+          <div class="msg-card ${unread ? 'unread' : ''}" onclick="openMessage(${m.id})">
+            <div class="msg-head">
+              <div>
+                <div class="msg-from">${esc(m.fromName || 'Anonymous')}
+                  ${m.fromEmail ? `<span class="contact">· ${esc(m.fromEmail)}</span>` : ''}
+                  ${m.fromPhone ? `<span class="contact">· ${esc(m.fromPhone)}</span>` : ''}
+                </div>
+                ${m.listing ? `<div class="msg-listing">Re: ${esc(m.listing.title)}</div>` : ''}
+              </div>
+              <div style="text-align: right">
+                ${unread ? '<span class="badge purple" style="display:block;margin-bottom:4px">New</span>' : ''}
+                <span class="msg-time">${timeAgo(m.createdAt)}</span>
+              </div>
+            </div>
+            <div class="msg-body">${esc(m.content).substring(0, 200)}${m.content.length > 200 ? '…' : ''}</div>
+          </div>`;
+      }).join('');
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+
+  async function openMessage(id) {
+    try {
+      const list = await api('/api/renter/messages');
+      const m = list.find(x => x.id === id);
+      if (!m) return;
+      if (m.readAt == null) {
+        await api('/api/renter/messages/' + id + '/read', { method: 'POST' });
+        // refresh badge
+        loadStats();
+      }
+      document.getElementById('message-modal-body').innerHTML = `
+        <h2>Message from ${esc(m.fromName || 'anonymous')}</h2>
+        <p class="sub">${m.listing ? `Re: ${esc(m.listing.title)}` : ''} · ${timeAgo(m.createdAt)}</p>
+        <div style="background: var(--bg); border-radius: 10px; padding: 16px; margin-bottom: 18px;">
+          <div style="font-size: 12px; color: var(--text-soft); margin-bottom: 6px;">CONTACT</div>
+          ${m.fromEmail ? `<div style="font-size: 14px"><strong>Email:</strong> <a href="mailto:${esc(m.fromEmail)}" style="color: var(--primary)">${esc(m.fromEmail)}</a></div>` : ''}
+          ${m.fromPhone ? `<div style="font-size: 14px"><strong>Phone:</strong> <a href="tel:${esc(m.fromPhone)}" style="color: var(--primary)">${esc(m.fromPhone)}</a></div>` : ''}
+          ${!m.fromEmail && !m.fromPhone ? '<div style="font-size: 14px; color: var(--muted)">No contact info provided.</div>' : ''}
+        </div>
+        <div style="font-size: 12px; color: var(--text-soft); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 700;">Message</div>
+        <div style="font-size: 14px; line-height: 1.65; white-space: pre-wrap; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px;">${esc(m.content)}</div>
+        <div class="form-actions" style="margin-top: 20px">
+          <button class="btn" onclick="closeModal(null, 'message-modal'); loadMessages();">Close</button>
+        </div>`;
+      document.getElementById('message-modal').classList.add('show');
+      // Refresh the list so the unread-styling drops
+      loadMessages();
+    } catch (e) { showToast(e.message, 'error'); }
+  }
+
+  /* ===== SETTINGS ===== */
+  function loadSettings() {
+    if (!currentUser) return;
+    document.getElementById('set-name').value = currentUser.fullName || '';
+    document.getElementById('set-email').value = currentUser.email || '';
+    document.getElementById('set-id').value = currentUser.id || '';
+    document.getElementById('set-created').value = currentUser.createdAt || 'unknown';
+  }
+
+  /* ===== INIT ===== */
+  async function hydrate() {
+    try {
+      const cached = localStorage.getItem(USER_KEY);
+      if (cached) currentUser = JSON.parse(cached);
+    } catch (e) {}
+    applyAuth();
+    // Validate token if we have one
+    if (getToken()) {
+      try {
+        const me = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + getToken() } });
+        if (me.ok) {
+          currentUser = await me.json();
+          localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+          applyAuth();
+        } else {
+          clearAuth();
+        }
+      } catch (e) { clearAuth(); }
+    }
+    setupPhotoUploader();
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.getElementById('listing-modal').classList.remove('show');
+        document.getElementById('message-modal').classList.remove('show');
+      }
+    });
+    if (currentUser) {
+      showSection(location.hash.slice(1) || 'dashboard');
+    }
+  }
+  hydrate();
+</script>
+
+</body>
+</html>
