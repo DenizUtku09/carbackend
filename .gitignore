@@ -1,0 +1,45 @@
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Project-specific ###
+# User-uploaded car photos — runtime data, not source
+uploads/
+# Ad-hoc build / verify logs the dev workflow drops at the root
+*.log
+# Maven wrapper local cache
+.mvn/.gitignore-keep
+# IntelliJ "out" directory
+out/
+# Claude Code local dev settings (per-machine allowlists, etc.)
+.claude/

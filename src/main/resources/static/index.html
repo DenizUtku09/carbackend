@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ashina Drive — Premium Car Rental & Sales</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #f7f8fa;
+      --bg-dark: #0a0e1a;
+      --text: #1a1d29;
+      --text-soft: #5a6373;
+      --muted: #8a93a3;
+      --border: #e4e7ec;
+      --primary: #ff5722;
+      --primary-hover: #e64a19;
+      --accent: #1976d2;
+      --success: #2e7d32;
+      --warning: #ed6c02;
+      --card-shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+      --card-shadow-hover: 0 4px 8px rgba(0,0,0,.08), 0 12px 32px rgba(0,0,0,.08);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    button { font-family: inherit; cursor: pointer; }
+    input, select { font-family: inherit; font-size: 14px; }
+
+    /* HEADER */
+    header.site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .brand-mark {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary), #c2185b);
+      border-radius: 8px;
+      display: grid; place-items: center;
+      color: white;
+    }
+    .brand-mark svg { width: 20px; height: 20px; }
+    nav.main-nav {
+      display: flex;
+      gap: 28px;
+    }
+    nav.main-nav a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-soft);
+      transition: color 0.15s;
+    }
+    nav.main-nav a:hover { color: var(--text); }
+    .header-cta {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: 1px solid var(--primary);
+      padding: 9px 18px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+    .btn:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+    .btn.btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn.btn-ghost:hover { background: var(--bg-soft); border-color: var(--text-soft); }
+    .btn.btn-dark {
+      background: var(--bg-dark);
+      border-color: var(--bg-dark);
+    }
+    .btn.btn-dark:hover { background: #1a1d29; }
+    .btn.btn-sm { padding: 6px 12px; font-size: 13px; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #0a0e1a 0%, #1a237e 50%, #311b92 100%);
+      color: white;
+      padding: 80px 24px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(255,87,34,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(33,150,243,0.15) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 800;
+      line-height: 1.05;
+      margin: 0 0 20px;
+      letter-spacing: -1.5px;
+      max-width: 720px;
+    }
+    .hero .accent-word {
+      background: linear-gradient(90deg, var(--primary), #ffb84d);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.75);
+      max-width: 560px;
+      margin: 0 0 36px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 56px;
+    }
+    .hero-stat .num {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1px;
+    }
+    .hero-stat .lbl {
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 2px;
+    }
+
+    /* SEARCH BAR (overlapping hero) */
+    .search-bar {
+      max-width: 1100px;
+      margin: -56px auto 0;
+      background: white;
+      padding: 18px;
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.15);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1fr auto;
+      gap: 12px;
+      position: relative;
+      z-index: 10;
+    }
+    .search-bar .field {
+      display: flex;
+      flex-direction: column;
+      padding: 0 14px;
+    }
+    .search-bar .field + .field { border-left: 1px solid var(--border); }
+    .search-bar label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .search-bar input, .search-bar select {
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 4px 0;
+      font-size: 15px;
+      color: var(--text);
+      width: 100%;
+    }
+    .search-bar .btn { padding: 12px 24px; align-self: stretch; }
+
+    /* MAIN SECTIONS */
+    main { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    section.section { padding: 80px 0 40px; }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .section-header h2 {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin: 0;
+    }
+    .section-header p {
+      color: var(--text-soft);
+      font-size: 14px;
+      margin: 4px 0 0;
+    }
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .chip:hover { border-color: var(--text-soft); }
+    .chip.active {
+      background: var(--text);
+      color: white;
+      border-color: var(--text);
+    }
+    .chip-count {
+      display: inline-block;
+      margin-left: 4px;
+      font-size: 11px;
+      opacity: 0.7;
+    }
+
+    /* CAR GRID */
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 22px;
+    }
+    .car-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+    .car-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .car-image {
+      height: 180px;
+      display: grid; place-items: center;
+      position: relative;
+    }
+    .car-image svg { width: 80%; height: 80%; }
+    .car-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.3px;
+    }
+    .car-tag.featured {
+      background: var(--primary);
+      color: white;
+    }
+    .car-body {
+      padding: 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .car-brand-line {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .car-name {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 4px 0 12px;
+      letter-spacing: -0.3px;
+    }
+    .car-specs {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 16px;
+    }
+    .car-specs span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .car-specs svg { width: 14px; height: 14px; }
+    .car-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+    }
+    .price-rental .price-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .price-rental .price-unit {
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .price-buy {
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .price-buy .amount {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* MODAL */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,14,26,0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-backdrop.show { display: flex; animation: fadeIn 0.2s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      background: white;
+      max-width: 920px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 80px rgba(0,0,0,.4);
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+    }
+    @media (max-width: 760px) {
+      .modal { grid-template-columns: 1fr; }
+    }
+    .modal-image {
+      background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+      display: grid;
+      place-items: center;
+      min-height: 320px;
+      position: relative;
+    }
+    .modal-image svg { width: 80%; height: 80%; }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      color: white;
+      display: grid; place-items: center;
+      font-size: 18px;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.3); }
+    .modal-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-body h3 {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+    .modal-body .modal-brand {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .modal-spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 24px;
+      margin: 20px 0;
+      padding: 18px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .spec-item .spec-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .spec-item .spec-value { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 2px; }
+    .modal-prices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .price-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .price-card.primary { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-color: var(--primary); }
+    .price-card .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    .price-card .val { font-size: 22px; font-weight: 700; margin-top: 4px; }
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+    }
+    .date-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .date-row label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .date-row input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    /* WHY CHOOSE US */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+    .feature {
+      padding: 28px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--primary), #c2185b);
+      border-radius: 12px;
+      display: grid; place-items: center;
+      margin-bottom: 16px;
+      color: white;
+    }
+    .feature-icon svg { width: 24px; height: 24px; }
+    .feature h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; }
+    .feature p { margin: 0; font-size: 14px; color: var(--text-soft); }
+
+    /* FOOTER */
+    footer.site-footer {
+      background: var(--bg-dark);
+      color: rgba(255,255,255,0.7);
+      padding: 60px 24px 30px;
+      margin-top: 80px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-col h4 {
+      color: white;
+      font-size: 14px;
+      margin: 0 0 16px;
+      font-weight: 700;
+    }
+    .footer-col ul { list-style: none; padding: 0; margin: 0; }
+    .footer-col li { margin-bottom: 8px; font-size: 13px; }
+    .footer-col a:hover { color: white; }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--text);
+      color: white;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 200;
+      max-width: 360px;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { background: var(--success); }
+
+    @media (max-width: 760px) {
+      .hero h1 { font-size: 38px; }
+      .hero p { font-size: 16px; }
+      .hero-stats { gap: 24px; }
+      .search-bar { grid-template-columns: 1fr; gap: 0; }
+      .search-bar .field + .field { border-left: none; border-top: 1px solid var(--border); }
+      .search-bar .field { padding: 10px 14px; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .section-header h2 { font-size: 24px; }
+      .modal-body { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#top">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+          <circle cx="6.5" cy="16.5" r="2.5"/>
+          <circle cx="16.5" cy="16.5" r="2.5"/>
+        </svg>
+      </span>
+      <span>Ashina Drive</span>
+    </a>
+    <nav class="main-nav">
+      <a href="#cars">Browse cars</a>
+      <a href="#why">Why us</a>
+      <a href="#footer">Contact</a>
+    </nav>
+    <div class="header-cta">
+      <a href="/admin.html" class="btn btn-ghost btn-sm">Admin</a>
+      <button class="btn btn-sm" onclick="document.getElementById('cars').scrollIntoView({behavior:'smooth'})">Browse cars</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <h1>Drive the car you <span class="accent-word">love</span>.<br>Rent it. Or own it.</h1>
+    <p>Premium cars from top brands. Rent by the day or buy outright. Transparent pricing, no surprises. Pick up wherever you need.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="stat-cars">10</div><div class="lbl">Cars in fleet</div></div>
+      <div class="hero-stat"><div class="num" id="stat-brands">10</div><div class="lbl">Brands</div></div>
+      <div class="hero-stat"><div class="num">24/7</div><div class="lbl">Support</div></div>
+      <div class="hero-stat"><div class="num">★ 4.9</div><div class="lbl">Avg rating</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="search-bar">
+  <div class="field">
+    <label>Search</label>
+    <input id="filter-search" type="text" placeholder="Tesla, BMW, Mustang…">
+  </div>
+  <div class="field">
+    <label>Brand</label>
+    <select id="filter-brand"><option value="">Any brand</option></select>
+  </div>
+  <div class="field">
+    <label>Transmission</label>
+    <select id="filter-trans">
+      <option value="">Any</option>
+      <option value="Automatic">Automatic</option>
+      <option value="Manual">Manual</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Max $/day</label>
+    <input id="filter-price" type="number" placeholder="500" min="0" step="10">
+  </div>
+  <button class="btn" onclick="applyFilters()">Search</button>
+</div>
+
+<main>
+  <section class="section" id="cars">
+    <div class="section-header">
+      <div>
+        <h2>Our fleet</h2>
+        <p id="results-count">10 cars available</p>
+      </div>
+      <div class="filter-chips">
+        <div class="chip active" data-filter="all" onclick="setChip(this, 'all')">All</div>
+        <div class="chip" data-filter="featured" onclick="setChip(this, 'featured')">Featured</div>
+        <div class="chip" data-filter="economy" onclick="setChip(this, 'economy')">Economy</div>
+        <div class="chip" data-filter="suv" onclick="setChip(this, 'suv')">SUV</div>
+        <div class="chip" data-filter="sports" onclick="setChip(this, 'sports')">Sports</div>
+        <div class="chip" data-filter="electric" onclick="setChip(this, 'electric')">Electric</div>
+      </div>
+    </div>
+    <div class="car-grid" id="car-grid"></div>
+  </section>
+
+  <section class="section" id="why">
+    <div class="section-header">
+      <div>
+        <h2>Why choose Ashina Drive</h2>
+        <p>The fundamentals you'd expect, done well.</p>
+      </div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <h3>No hidden fees</h3>
+        <p>The price you see is the price you pay. Insurance, taxes, and pickup are all included.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+        <h3>Book in 60 seconds</h3>
+        <p>Pick a car, pick your dates, confirm. We'll have it ready when you arrive.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3>Fully insured</h3>
+        <p>Every vehicle in our fleet is covered by comprehensive insurance — drive worry-free.</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Always-on support</h3>
+        <p>Reach a real human 24/7. Roadside, swap-outs, questions about an extension — we're here.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" id="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <div class="brand" style="color: white;">
+        <span class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/>
+            <circle cx="6.5" cy="16.5" r="2.5"/>
+            <circle cx="16.5" cy="16.5" r="2.5"/>
+          </svg>
+        </span>
+        <span>Ashina Drive</span>
+      </div>
+      <p style="margin-top: 14px; font-size: 13px;">Rent or own — your call. Premium cars at fair prices.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Browse</h4>
+      <ul>
+        <li><a href="#cars">All cars</a></li>
+        <li><a href="#cars">Featured</a></li>
+        <li><a href="#cars">Economy</a></li>
+        <li><a href="#cars">Sports</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#why">Why us</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Help</h4>
+      <ul>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Terms</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Ashina Drive. Mock site for demonstration.</span>
+    <span>Built on Spring Boot · <a href="/admin.html">Admin panel</a></span>
+  </div>
+</footer>
+
+<div class="modal-backdrop" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-image" id="modal-image">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ===== MOCK CAR DATA ===== */
+  // Note: this is mock data for the demo. In production this would come from
+  // the backend (e.g. /api/cars/list). The admin panel at /admin.html manages
+  // the real entities (brands, colors, etc.) in the Postgres database.
+  const CARS = [
+    { id: 1, brand: 'Tesla', model: 'Model 3', year: 2024, color: '#e0e0e0', categories: ['featured','electric'],
+      fuel: 'Electric', transmission: 'Automatic', seats: 5, range: '358 mi',
+      rentDay: 109, buy: 42990, available: true, tag: 'Electric' },
+    { id: 2, brand: 'BMW', model: 'X5 xDrive40i', year: 2024, color: '#1a237e', categories: ['featured','suv'],
+      fuel: 'Petrol', transmission: 'Automatic', seats: 7, range: '480 mi',
+      rentDay: 189, buy: 68900, available: true, tag: 'Featured' },
+    { id: 3, brand: 'Mercedes-Benz', model: 'C-Class C300', year: 2024, color: '#0d47a1', categories: ['featured'],
+      fuel: 'Petrol', transmission: 'Automatic', seats: 5, range: '420 mi',
+      rentDay: 159, buy: 48450, available: true, tag: 'Featured' },
+    { id: 4, brand: 'Toyota', model: 'Corolla LE', year: 2023, color: '#f57c00', categories: ['economy'],
+      fuel: 'Petrol', transmission: 'Automatic', seats: 5, range: '450 mi',
+      rentDay: 49, buy: 21550, available: true, tag: 'Economy' },
+    { id: 5, brand: 'Audi', model: 'Q7 55 TFSI', year: 2024, color: '#37474f', categories: ['suv'],
+      fuel: 'Petrol', transmission: 'Automatic', seats: 7, range: '440 mi',
+      rentDay: 199, buy: 71800, available: true, tag: 'Luxury' },
+    { id: 6, brand: 'Honda', model: 'Civic Sport', year: 2024, color: '#c62828', categories: ['economy'],
+      fuel: 'Petrol', transmission: 'Manual', seats: 5, range: '420 mi',
+      rentDay: 55, buy: 24600, available: true, tag: 'Manual' },
+    { id: 7, brand: 'Ford', model: 'Mustang GT', year: 2024, color: '#d84315', categories: ['featured','sports'],
+      fuel: 'Petrol', transmission: 'Manual', seats: 4, range: '380 mi',
+      rentDay: 175, buy: 45800, available: true, tag: 'V8' },
+    { id: 8, brand: 'Volkswagen', model: 'Golf GTI', year: 2023, color: '#1b5e20', categories: ['sports'],
+      fuel: 'Petrol', transmission: 'Manual', seats: 5, range: '400 mi',
+      rentDay: 95, buy: 32800, available: true, tag: 'Hot Hatch' },
+    { id: 9, brand: 'Range Rover', model: 'Sport SE', year: 2024, color: '#263238', categories: ['suv'],
+      fuel: 'Petrol', transmission: 'Automatic', seats: 5, range: '450 mi',
+      rentDay: 245, buy: 89500, available: true, tag: 'Luxury' },
+    { id: 10, brand: 'Porsche', model: '911 Carrera', year: 2024, color: '#e65100', categories: ['featured','sports'],
+      fuel: 'Petrol', transmission: 'Automatic', seats: 2, range: '350 mi',
+      rentDay: 389, buy: 116050, available: true, tag: 'Iconic' },
+  ];
+
+  let activeChip = 'all';
+
+  /* ===== CAR SVG (tintable) ===== */
+  function carSvg(color) {
+    return `<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g${color.replace('#','')}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="${color}" stop-opacity="1"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity="0.7"/>
+        </linearGradient>
+      </defs>
+      <path d="M20 70 Q20 55 35 50 L60 50 L75 30 Q85 25 110 25 L140 25 Q155 25 170 38 L180 55 Q185 60 185 70 L185 78 Q185 82 180 82 L172 82 Q170 88 162 88 Q154 88 152 82 L48 82 Q46 88 38 88 Q30 88 28 82 L20 82 Q15 82 15 78 Z"
+            fill="url(#g${color.replace('#','')})" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
+      <path d="M75 35 L100 35 L115 50 L75 50 Z" fill="rgba(255,255,255,0.4)"/>
+      <path d="M120 35 L140 35 Q150 35 158 48 L122 48 Z" fill="rgba(255,255,255,0.4)"/>
+      <circle cx="40" cy="82" r="9" fill="#1a1a1a"/>
+      <circle cx="40" cy="82" r="4" fill="#555"/>
+      <circle cx="160" cy="82" r="9" fill="#1a1a1a"/>
+      <circle cx="160" cy="82" r="4" fill="#555"/>
+    </svg>`;
+  }
+
+  /* ===== RENDER ===== */
+  function carCard(c) {
+    return `
+      <div class="car-card" onclick="openModal(${c.id})">
+        <div class="car-image" style="background: linear-gradient(135deg, ${c.color}33, ${c.color}11);">
+          ${c.categories.includes('featured') ? `<div class="car-tag featured">Featured</div>` : (c.tag ? `<div class="car-tag">${esc(c.tag)}</div>` : '')}
+          ${carSvg(c.color)}
+        </div>
+        <div class="car-body">
+          <div class="car-brand-line">${esc(c.brand)} · ${c.year}</div>
+          <div class="car-name">${esc(c.model)}</div>
+          <div class="car-specs">
+            <span>${specIcon('fuel')} ${esc(c.fuel)}</span>
+            <span>${specIcon('gear')} ${esc(c.transmission.substring(0,4))}.</span>
+            <span>${specIcon('seat')} ${c.seats}</span>
+          </div>
+          <div class="car-price-row">
+            <div class="price-rental">
+              <div class="price-amount">$${c.rentDay}</div>
+              <div class="price-unit">per day</div>
+            </div>
+            <div class="price-buy">
+              <span>buy from</span>
+              <span class="amount">$${c.buy.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function specIcon(name) {
+    if (name === 'fuel') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="15" y2="22"/><line x1="4" y1="9" x2="14" y2="9"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2 2 2 0 0 0 2-2V9.83a2 2 0 0 0-.59-1.42L18 5"/></svg>';
+    if (name === 'gear') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+    if (name === 'seat') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>';
+    return '';
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function getFilteredCars() {
+    const search = document.getElementById('filter-search').value.trim().toLowerCase();
+    const brand = document.getElementById('filter-brand').value;
+    const trans = document.getElementById('filter-trans').value;
+    const maxPrice = parseFloat(document.getElementById('filter-price').value);
+    return CARS.filter(c => {
+      if (activeChip !== 'all' && !c.categories.includes(activeChip)) return false;
+      if (search && !(c.brand + ' ' + c.model).toLowerCase().includes(search)) return false;
+      if (brand && c.brand !== brand) return false;
+      if (trans && c.transmission !== trans) return false;
+      if (!isNaN(maxPrice) && c.rentDay > maxPrice) return false;
+      return true;
+    });
+  }
+
+  function renderGrid() {
+    const list = getFilteredCars();
+    const grid = document.getElementById('car-grid');
+    if (!list.length) {
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted);">No cars match your filters. <button class="btn btn-ghost btn-sm" onclick="resetFilters()" style="margin-left: 8px">Reset</button></div>';
+    } else {
+      grid.innerHTML = list.map(carCard).join('');
+    }
+    document.getElementById('results-count').textContent = list.length + ' car' + (list.length === 1 ? '' : 's') + ' available';
+  }
+
+  function applyFilters() { renderGrid(); }
+  function resetFilters() {
+    document.getElementById('filter-search').value = '';
+    document.getElementById('filter-brand').value = '';
+    document.getElementById('filter-trans').value = '';
+    document.getElementById('filter-price').value = '';
+    setChip(document.querySelector('.chip[data-filter="all"]'), 'all');
+  }
+  function setChip(el, filter) {
+    activeChip = filter;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    if (el) el.classList.add('active');
+    renderGrid();
+  }
+
+  /* ===== MODAL ===== */
+  function openModal(id) {
+    const c = CARS.find(x => x.id === id);
+    if (!c) return;
+    document.getElementById('modal-image').innerHTML =
+      '<button class="modal-close" onclick="closeModal()">×</button>' +
+      '<div style="position:absolute;top:16px;left:16px;background:rgba(255,255,255,0.95);color:var(--text);padding:5px 12px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:0.4px;text-transform:uppercase;">' + esc(c.tag || 'Car') + '</div>' +
+      carSvg(c.color);
+    document.getElementById('modal-image').style.background = `linear-gradient(135deg, ${c.color}, ${shade(c.color, -30)})`;
+    const today = new Date().toISOString().slice(0, 10);
+    const future = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-brand">${esc(c.brand)} · ${c.year}</div>
+      <h3>${esc(c.model)}</h3>
+      <div class="modal-spec-grid">
+        <div class="spec-item"><div class="spec-label">Fuel type</div><div class="spec-value">${esc(c.fuel)}</div></div>
+        <div class="spec-item"><div class="spec-label">Transmission</div><div class="spec-value">${esc(c.transmission)}</div></div>
+        <div class="spec-item"><div class="spec-label">Seats</div><div class="spec-value">${c.seats}</div></div>
+        <div class="spec-item"><div class="spec-label">Range</div><div class="spec-value">${esc(c.range)}</div></div>
+      </div>
+      <div class="modal-prices">
+        <div class="price-card primary"><div class="lbl">Rental</div><div class="val">$${c.rentDay}<span style="font-size:13px;color:var(--text-soft);font-weight:500"> / day</span></div></div>
+        <div class="price-card"><div class="lbl">Purchase</div><div class="val">$${c.buy.toLocaleString()}</div></div>
+      </div>
+      <div class="date-row">
+        <div><label>Pickup</label><input type="date" id="d-pickup" value="${today}"></div>
+        <div><label>Return</label><input type="date" id="d-return" value="${future}"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="reserve(${c.id}, 'rent')">Reserve rental</button>
+        <button class="btn btn-dark" onclick="reserve(${c.id}, 'buy')">Buy this car</button>
+      </div>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin:12px 0 0">Demo only — submissions are mocked locally, no reservation is sent to the backend yet.</p>
+    `;
+    document.getElementById('modal').classList.add('show');
+  }
+  function closeModal(e) {
+    if (e && e.target.closest('.modal') && !e.target.closest('.modal-close')) return;
+    document.getElementById('modal').classList.remove('show');
+  }
+
+  function reserve(id, kind) {
+    const c = CARS.find(x => x.id === id);
+    const msg = kind === 'rent'
+      ? `Reservation confirmed: ${c.brand} ${c.model} (mock).`
+      : `Purchase request sent: ${c.brand} ${c.model} (mock).`;
+    closeModal();
+    showToast(msg, 'success');
+  }
+
+  function showToast(msg, kind) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (kind || '');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  /* darken/lighten a hex color */
+  function shade(hex, percent) {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const r = Math.max(0, Math.min(255, (num >> 16) + percent));
+    const g = Math.max(0, Math.min(255, ((num >> 8) & 0xff) + percent));
+    const b = Math.max(0, Math.min(255, (num & 0xff) + percent));
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  /* ===== INIT ===== */
+  function init() {
+    // populate brand dropdown
+    const brands = [...new Set(CARS.map(c => c.brand))].sort();
+    const sel = document.getElementById('filter-brand');
+    brands.forEach(b => { const o = document.createElement('option'); o.value = b; o.textContent = b; sel.appendChild(o); });
+    document.getElementById('stat-cars').textContent = CARS.length;
+    document.getElementById('stat-brands').textContent = brands.length;
+
+    // live filters
+    ['filter-search','filter-brand','filter-trans','filter-price'].forEach(id => {
+      document.getElementById(id).addEventListener('input', renderGrid);
+    });
+
+    // ESC to close modal
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    renderGrid();
+  }
+  init();
+</script>
+
+</body>
+</html>

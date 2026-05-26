@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Car Rental Admin</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --sidebar: #161b22;
+      --panel: #1c2230;
+      --panel-2: #232a3a;
+      --border: #2d3548;
+      --text: #e6e6e6;
+      --muted: #8a93a0;
+      --accent: #4a9eff;
+      --accent-hover: #3a8eef;
+      --accent-soft: rgba(74, 158, 255, 0.12);
+      --danger: #ff5757;
+      --success: #4caf50;
+      --warning: #ffb84d;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    code { font-family: "JetBrains Mono", "Fira Code", Consolas, monospace; font-size: 12px; background: var(--panel-2); padding: 1px 5px; border-radius: 3px; }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .brand {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+    }
+    .brand-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--accent), #6c44ff);
+      border-radius: 6px;
+      display: grid; place-items: center;
+    }
+    .brand-icon svg { width: 18px; height: 18px; color: white; }
+    nav { flex: 1; padding: 12px 8px; }
+    .nav-group { margin-bottom: 16px; }
+    .nav-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      padding: 6px 12px;
+    }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text);
+      margin: 1px 0;
+      transition: background 0.15s;
+    }
+    .nav-link:hover { background: var(--panel-2); }
+    .nav-link.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .nav-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .sidebar-footer {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .sidebar-footer .auth-line {
+      display: flex; gap: 6px;
+      margin-bottom: 8px;
+    }
+    .sidebar-footer input {
+      flex: 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      min-width: 0;
+    }
+    .sidebar-footer input:focus { outline: none; border-color: var(--accent); }
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: var(--panel);
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .api-status.up .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
+    .api-status.down .status-dot { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+    .api-status.connecting .status-dot { background: var(--warning); animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: 0.4; } }
+
+    /* MAIN */
+    main { padding: 28px 36px; max-width: 1200px; }
+    .page-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .page-header h1 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .page-header .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    section[data-route] { display: none; }
+    section[data-route].active { display: block; animation: fadeIn 0.2s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    /* CARDS */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-header h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-header h2 svg { width: 16px; height: 16px; color: var(--accent); }
+    .card-body { padding: 16px 18px; }
+
+    /* GRID FOR DASHBOARD STATS */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), #6c44ff);
+    }
+    .stat-card .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .stat-card .value {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .stat-card .sub {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* FORM ROW */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .form-row.cols-2 { grid-template-columns: 1fr 1fr auto; }
+    .form-row.cols-3 { grid-template-columns: 1fr 1fr 1fr auto; }
+    .form-row input, .form-row select {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      min-width: 0;
+    }
+    .form-row input:focus, .form-row select:focus { outline: none; border-color: var(--accent); }
+    button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover { background: var(--accent-hover); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button svg { width: 14px; height: 14px; }
+    button.btn-secondary {
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button.btn-secondary:hover { background: var(--border); }
+    button.btn-danger {
+      background: transparent;
+      color: var(--danger);
+      padding: 4px 10px;
+      font-size: 12px;
+      border: 1px solid transparent;
+    }
+    button.btn-danger:hover { background: rgba(255, 87, 87, 0.1); border-color: var(--danger); }
+    .note { font-size: 11px; color: var(--muted); margin-top: 8px; }
+    .note code { font-size: 11px; }
+
+    /* TABLE */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+    th, td {
+      text-align: left;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      background: var(--panel-2);
+    }
+    tbody tr:hover { background: var(--panel-2); }
+    .empty { text-align: center; color: var(--muted); padding: 30px; font-style: italic; }
+    .badge { display: inline-block; padding: 2px 8px; background: var(--accent-soft); color: var(--accent); border-radius: 10px; font-size: 11px; font-weight: 600; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left-width: 4px;
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, opacity 0.3s;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      max-width: 340px;
+      z-index: 100;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-left-color: var(--success); }
+    .toast.error { border-left-color: var(--danger); }
+    .toast.info { border-left-color: var(--accent); }
+
+    @media (max-width: 760px) {
+      body { grid-template-columns: 1fr; }
+      .sidebar { position: static; height: auto; }
+      main { padding: 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"></path>
+        <circle cx="6.5" cy="16.5" r="2.5"></circle>
+        <circle cx="16.5" cy="16.5" r="2.5"></circle>
+      </svg>
+    </span>
+    <span>Car Rental</span>
+  </div>
+
+  <nav id="nav">
+    <div class="nav-group">
+      <div class="nav-title">Overview</div>
+      <div class="nav-link" data-section="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Core</div>
+      <div class="nav-link" data-section="jobs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Jobs
+      </div>
+      <div class="nav-link" data-section="employees">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Employees
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Cars</div>
+      <div class="nav-link" data-section="brands">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        Brands
+      </div>
+      <div class="nav-link" data-section="colors">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="13" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="10" cy="20" r="2.5"/></svg>
+        Colors
+      </div>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-title">Address</div>
+      <div class="nav-link" data-section="countries">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Countries
+      </div>
+      <div class="nav-link" data-section="cities">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l5-4v18"/><path d="M19 21V11l-6-4"/></svg>
+        Cities
+      </div>
+      <div class="nav-link" data-section="streets">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+        Streets
+      </div>
+      <div class="nav-link" data-section="buildings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/></svg>
+        Building Numbers
+      </div>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="auth-line">
+      <input id="username" placeholder="user" value="admin">
+      <input id="password" type="password" placeholder="pass" value="admin">
+    </div>
+    <button class="btn-secondary" style="width: 100%; justify-content: center; padding: 6px;" onclick="reconnect()">Reconnect</button>
+    <div class="api-status" id="api-status" style="margin-top: 8px;">
+      <span class="status-dot"></span>
+      <span id="status-text">not connected</span>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <!-- DASHBOARD -->
+  <section data-route="dashboard">
+    <div class="page-header">
+      <div>
+        <h1>Dashboard</h1>
+        <div class="subtitle">Overview of your car rental backend</div>
+      </div>
+      <button class="btn-secondary" onclick="loadDashboard()">Refresh</button>
+    </div>
+
+    <div class="stat-grid" id="stat-grid">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Quick links
+        </h2>
+      </div>
+      <div class="card-body">
+        <p style="margin: 0 0 12px; font-size: 13px; color: var(--muted);">External tools wired to this backend:</p>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="/swagger-ui/index.html" target="_blank"><button class="btn-secondary">Swagger UI ↗</button></a>
+          <a href="/v3/api-docs" target="_blank"><button class="btn-secondary">OpenAPI JSON ↗</button></a>
+          <a href="/actuator/health" target="_blank"><button class="btn-secondary">Actuator health ↗</button></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOBS -->
+  <section data-route="jobs">
+    <div class="page-header">
+      <div>
+        <h1>Jobs</h1>
+        <div class="subtitle">Employee role titles (Manager, Driver, Mechanic, …)</div>
+      </div>
+      <button class="btn-secondary" onclick="loadJobs()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Add new job</h2></div>
+      <div class="card-body">
+        <form class="form-row" onsubmit="addJob(event)">
+          <input id="job-title" type="text" placeholder="Job title (e.g. Manager)" required>
+          <button type="submit">Add Job</button>
+        </form>
+        <div class="note">POST <code>/api/jobs/addNewJob</code> with body <code>{ "title": "..." }</code></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All jobs <span id="jobs-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Title</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="jobs-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMPLOYEES (read-only) -->
+  <section data-route="employees">
+    <div class="page-header">
+      <div>
+        <h1>Employees</h1>
+        <div class="subtitle">Read-only listing (add via registration endpoint)</div>
+      </div>
+      <button class="btn-secondary" onclick="loadEmployees()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All employees <span id="employees-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th>ID</th><th>Full name</th><th>Email</th><th>Phone</th><th>Verified</th></tr></thead>
+        <tbody id="employees-tbody"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">GET <code>/api/employees/getAllEmployees</code></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRANDS -->
+  <section data-route="brands">
+    <div class="page-header">
+      <div>
+        <h1>Car Brands</h1>
+        <div class="subtitle">Manufacturers (Toyota, BMW, …)</div>
+      </div>
+      <button class="btn-secondary" onclick="loadBrands()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Add new brand</h2></div>
+      <div class="card-body">
+        <form class="form-row" onsubmit="addBrand(event)">
+          <input id="brand-name" type="text" placeholder="Brand name (e.g. Toyota)" required>
+          <button type="submit">Add Brand</button>
+        </form>
+        <div class="note">POST <code>/api/carBrands/addCarBrand?brandName=...</code></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All brands <span id="brands-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th>Brand</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="brands-tbody"><tr><td colspan="2" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLORS -->
+  <section data-route="colors">
+    <div class="page-header">
+      <div>
+        <h1>Colors</h1>
+        <div class="subtitle">Available paint colors for cars</div>
+      </div>
+      <button class="btn-secondary" onclick="loadColors()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Add new color</h2></div>
+      <div class="card-body">
+        <form class="form-row" onsubmit="addColor(event)">
+          <input id="color-name" type="text" placeholder="Color name (e.g. red)" required>
+          <button type="submit">Add Color</button>
+        </form>
+        <div class="note">POST <code>/api/colors/addColor?colorName=...</code></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All colors <span id="colors-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th style="width:60px">ID</th><th>Swatch</th><th>Name</th><th style="width:90px">Actions</th></tr></thead>
+        <tbody id="colors-tbody"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTRIES -->
+  <section data-route="countries">
+    <div class="page-header">
+      <div>
+        <h1>Countries</h1>
+        <div class="subtitle">Top-level address entity</div>
+      </div>
+      <button class="btn-secondary" onclick="loadCountries()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All countries <span id="countries-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Cities</th></tr></thead>
+        <tbody id="countries-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">GET <code>/api/Country/getAll</code>. Add/update use complex DTOs — best done from Swagger.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CITIES -->
+  <section data-route="cities">
+    <div class="page-header">
+      <div>
+        <h1>Cities</h1>
+        <div class="subtitle">Cities belong to countries</div>
+      </div>
+      <button class="btn-secondary" onclick="loadCities()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Add new city (under a country)</h2></div>
+      <div class="card-body">
+        <form class="form-row cols-2" onsubmit="addCity(event)">
+          <input id="city-country" type="text" placeholder="Country name (must exist)" required>
+          <input id="city-name" type="text" placeholder="City name" required>
+          <button type="submit">Add City</button>
+        </form>
+        <div class="note">POST <code>/api/City/AddCity/{countryName}</code> with body <code>{ "cityName": "..." }</code></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All cities <span id="cities-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th>ID</th><th>Name</th><th>Country</th></tr></thead>
+        <tbody id="cities-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- STREETS -->
+  <section data-route="streets">
+    <div class="page-header">
+      <div>
+        <h1>Streets</h1>
+        <div class="subtitle">Streets belong to cities</div>
+      </div>
+      <button class="btn-secondary" onclick="loadStreets()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>Add new street (under a city)</h2></div>
+      <div class="card-body">
+        <form class="form-row cols-2" onsubmit="addStreet(event)">
+          <input id="street-city" type="text" placeholder="City name (must exist)" required>
+          <input id="street-name" type="text" placeholder="Street name" required>
+          <button type="submit">Add Street</button>
+        </form>
+        <div class="note">POST <code>/api/Street/AddStreet/{cityName}</code> with body <code>{ "streetName": "..." }</code></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All streets <span id="streets-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th>ID</th><th>Name</th><th>City</th></tr></thead>
+        <tbody id="streets-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUILDING NUMBERS -->
+  <section data-route="buildings">
+    <div class="page-header">
+      <div>
+        <h1>Building Numbers</h1>
+        <div class="subtitle">House/building numbers within a street</div>
+      </div>
+      <button class="btn-secondary" onclick="loadBuildings()">Refresh</button>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>All building numbers <span id="buildings-count" class="badge">0</span></h2></div>
+      <div class="card-body">
+        <table><thead><tr><th>ID</th><th>No</th><th>Street</th></tr></thead>
+        <tbody id="buildings-tbody"><tr><td colspan="3" class="empty">Loading…</td></tr></tbody></table>
+        <div class="note">GET <code>/api/BuildingNumber/GetAllBuildingNumbers</code></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+  /* ===== AUTH ===== */
+  function getAuthHeader() {
+    const u = document.getElementById('username').value;
+    const p = document.getElementById('password').value;
+    return 'Basic ' + btoa(u + ':' + p);
+  }
+
+  /* ===== STATUS + TOAST ===== */
+  function setStatus(text, kind) {
+    document.getElementById('status-text').textContent = text;
+    document.getElementById('api-status').className = 'api-status ' + (kind || '');
+  }
+  function showToast(message, kind) {
+    const t = document.getElementById('toast');
+    t.textContent = message;
+    t.className = 'toast show ' + (kind || 'info');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  /* ===== FETCH WRAPPER ===== */
+  async function api(path, options) {
+    options = options || {};
+    options.headers = Object.assign({}, options.headers, {
+      'Authorization': getAuthHeader(),
+      'Accept': 'application/json'
+    });
+    if (options.body && typeof options.body === 'object') {
+      options.headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(options.body);
+    }
+    const resp = await fetch(path, options);
+    if (resp.status === 401) {
+      setStatus('auth failed', 'down');
+      throw new Error('401 Unauthorized — check sidebar credentials');
+    }
+    if (!resp.ok) {
+      const body = await resp.text();
+      throw new Error(resp.status + ' ' + (body || resp.statusText));
+    }
+    const ct = resp.headers.get('content-type') || '';
+    if (resp.status === 204 || !ct) return null;
+    return ct.includes('json') ? resp.json() : resp.text();
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function renderEmpty(tbody, cols, msg) {
+    document.getElementById(tbody).innerHTML = `<tr><td colspan="${cols}" class="empty">${esc(msg)}</td></tr>`;
+  }
+
+  /* ===== NAV ROUTING ===== */
+  const sectionLoaders = {
+    dashboard: loadDashboard,
+    jobs: loadJobs,
+    employees: loadEmployees,
+    brands: loadBrands,
+    colors: loadColors,
+    countries: loadCountries,
+    cities: loadCities,
+    streets: loadStreets,
+    buildings: loadBuildings
+  };
+  function showSection(name) {
+    if (!sectionLoaders[name]) name = 'dashboard';
+    document.querySelectorAll('section[data-route]').forEach(s => s.classList.toggle('active', s.dataset.route === name));
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.section === name));
+    if (location.hash.slice(1) !== name) location.hash = name;
+    try { sectionLoaders[name](); } catch (e) { console.error(e); }
+  }
+  document.getElementById('nav').addEventListener('click', e => {
+    const link = e.target.closest('.nav-link');
+    if (link) showSection(link.dataset.section);
+  });
+  window.addEventListener('hashchange', () => showSection(location.hash.slice(1) || 'dashboard'));
+
+  /* ===== RECONNECT ===== */
+  async function reconnect() {
+    setStatus('connecting', 'connecting');
+    try {
+      await api('/actuator/health');
+      setStatus('connected', 'up');
+      showToast('Connected', 'success');
+      const active = document.querySelector('.nav-link.active');
+      if (active) sectionLoaders[active.dataset.section]();
+    } catch (e) {
+      setStatus('error', 'down');
+      showToast(e.message, 'error');
+    }
+  }
+
+  /* ===== DASHBOARD ===== */
+  async function loadDashboard() {
+    const grid = document.getElementById('stat-grid');
+    const cards = [
+      { label: 'Jobs',          path: '/api/jobs/getAllJobs',                  section: 'jobs' },
+      { label: 'Employees',     path: '/api/employees/getAllEmployees',        section: 'employees' },
+      { label: 'Brands',        path: '/api/carBrands/getAllCarBrands',        section: 'brands' },
+      { label: 'Colors',        path: '/api/colors/getAllColors',              section: 'colors' },
+      { label: 'Countries',     path: '/api/Country/getAll',                   section: 'countries' },
+      { label: 'Cities',        path: '/api/City/GetAllCities',                section: 'cities' },
+      { label: 'Streets',       path: '/api/Street/GetAllStreets',             section: 'streets' },
+      { label: 'Buildings',     path: '/api/BuildingNumber/GetAllBuildingNumbers', section: 'buildings' },
+    ];
+    grid.innerHTML = cards.map(c => `
+      <div class="stat-card" onclick="showSection('${c.section}')" style="cursor:pointer">
+        <div class="label">${esc(c.label)}</div>
+        <div class="value" id="stat-${c.section}">—</div>
+        <div class="sub">click to manage</div>
+      </div>
+    `).join('');
+    setStatus('connecting', 'connecting');
+    let anySuccess = false;
+    await Promise.all(cards.map(async c => {
+      try {
+        const data = await api(c.path);
+        const count = Array.isArray(data) ? data.length : (data ? 1 : 0);
+        document.getElementById('stat-' + c.section).textContent = count;
+        anySuccess = true;
+      } catch (e) {
+        document.getElementById('stat-' + c.section).textContent = '!';
+        document.getElementById('stat-' + c.section).style.color = 'var(--danger)';
+      }
+    }));
+    setStatus(anySuccess ? 'connected' : 'error', anySuccess ? 'up' : 'down');
+  }
+
+  /* ===== JOBS ===== */
+  async function loadJobs() {
+    try {
+      const jobs = await api('/api/jobs/getAllJobs');
+      document.getElementById('jobs-count').textContent = jobs.length;
+      const tbody = document.getElementById('jobs-tbody');
+      if (!jobs.length) { renderEmpty('jobs-tbody', 3, 'No jobs yet.'); return; }
+      tbody.innerHTML = jobs.map(j => `
+        <tr>
+          <td>${j.id}</td>
+          <td>${esc(j.title)}</td>
+          <td><button class="btn-danger" onclick="deleteJob(${j.id})">Delete</button></td>
+        </tr>`).join('');
+      setStatus('connected', 'up');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('jobs-tbody', 3, 'Error: ' + e.message); }
+  }
+  async function addJob(e) {
+    e.preventDefault();
+    const t = document.getElementById('job-title');
+    try {
+      const saved = await api('/api/jobs/addNewJob', { method: 'POST', body: { title: t.value.trim() } });
+      showToast(`Added "${saved.title}" (id ${saved.id})`, 'success');
+      t.value = ''; loadJobs();
+    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+  }
+  async function deleteJob(id) {
+    if (!confirm('Delete job #' + id + '?')) return;
+    try { await api('/api/jobs/deleteById/' + id, { method: 'DELETE' }); showToast('Deleted', 'success'); loadJobs(); }
+    catch (e) { showToast('Delete failed: ' + e.message, 'error'); }
+  }
+
+  /* ===== EMPLOYEES ===== */
+  async function loadEmployees() {
+    try {
+      const list = await api('/api/employees/getAllEmployees');
+      document.getElementById('employees-count').textContent = list.length;
+      const tbody = document.getElementById('employees-tbody');
+      if (!list.length) { renderEmpty('employees-tbody', 5, 'No employees yet.'); return; }
+      tbody.innerHTML = list.map(e => `
+        <tr>
+          <td>${e.id}</td>
+          <td>${esc(e.fullname)}</td>
+          <td>${esc(e.email)}</td>
+          <td>${esc(e.phoneNumber)}</td>
+          <td>${e.verified ? '<span class="badge">yes</span>' : 'no'}</td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('employees-tbody', 5, 'Error: ' + e.message); }
+  }
+
+  /* ===== BRANDS ===== */
+  async function loadBrands() {
+    try {
+      const brands = await api('/api/carBrands/getAllCarBrands');
+      document.getElementById('brands-count').textContent = brands.length;
+      const tbody = document.getElementById('brands-tbody');
+      if (!brands.length) { renderEmpty('brands-tbody', 2, 'No brands yet.'); return; }
+      tbody.innerHTML = brands.map(b => `
+        <tr>
+          <td>${esc(b)}</td>
+          <td><button class="btn-danger" onclick="deleteBrand('${esc(b)}')">Delete</button></td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('brands-tbody', 2, 'Error: ' + e.message); }
+  }
+  async function addBrand(e) {
+    e.preventDefault();
+    const n = document.getElementById('brand-name');
+    try {
+      await api('/api/carBrands/addCarBrand?brandName=' + encodeURIComponent(n.value.trim()), { method: 'POST' });
+      showToast(`Added "${n.value.trim()}"`, 'success'); n.value = ''; loadBrands();
+    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+  }
+  async function deleteBrand(name) {
+    if (!confirm('Delete brand "' + name + '"?')) return;
+    try {
+      await api('/api/carBrands/deleteCarBrandByName?brandName=' + encodeURIComponent(name), { method: 'DELETE' });
+      showToast('Deleted', 'success'); loadBrands();
+    } catch (e) { showToast('Delete failed: ' + e.message, 'error'); }
+  }
+
+  /* ===== COLORS ===== */
+  function looksLikeCssColor(name) {
+    const test = document.createElement('div').style;
+    test.color = '';
+    test.color = name;
+    return test.color !== '';
+  }
+  async function loadColors() {
+    try {
+      const colors = await api('/api/colors/getAllColors');
+      document.getElementById('colors-count').textContent = colors.length;
+      const tbody = document.getElementById('colors-tbody');
+      if (!colors.length) { renderEmpty('colors-tbody', 4, 'No colors yet.'); return; }
+      tbody.innerHTML = colors.map(c => {
+        const safe = looksLikeCssColor(c.colorName) ? c.colorName : '#888';
+        return `<tr>
+          <td>${c.id}</td>
+          <td><span style="display:inline-block;width:22px;height:22px;border-radius:4px;background:${esc(safe)};border:1px solid var(--border);vertical-align:middle"></span></td>
+          <td>${esc(c.colorName)}</td>
+          <td><button class="btn-danger" onclick="deleteColor(${c.id}, '${esc(c.colorName)}')">Delete</button></td>
+        </tr>`;
+      }).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('colors-tbody', 4, 'Error: ' + e.message); }
+  }
+  async function addColor(e) {
+    e.preventDefault();
+    const n = document.getElementById('color-name');
+    try {
+      const saved = await api('/api/colors/addColor?colorName=' + encodeURIComponent(n.value.trim()), { method: 'POST' });
+      showToast(`Added "${saved.colorName}" (id ${saved.id})`, 'success'); n.value = ''; loadColors();
+    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+  }
+  async function deleteColor(id, name) {
+    if (!confirm('Delete color "' + name + '"?')) return;
+    try {
+      await api('/api/colors/deleteColor?id=' + id + '&colorName=' + encodeURIComponent(name), { method: 'DELETE' });
+      showToast('Deleted', 'success'); loadColors();
+    } catch (e) { showToast('Delete failed: ' + e.message, 'error'); }
+  }
+
+  /* ===== COUNTRIES ===== */
+  async function loadCountries() {
+    try {
+      const list = await api('/api/Country/getAll');
+      document.getElementById('countries-count').textContent = list.length;
+      const tbody = document.getElementById('countries-tbody');
+      if (!list.length) { renderEmpty('countries-tbody', 3, 'No countries yet.'); return; }
+      tbody.innerHTML = list.map(c => `
+        <tr>
+          <td>${c.countryId || c.id || '?'}</td>
+          <td>${esc(c.countryName)}</td>
+          <td>${Array.isArray(c.cities) ? c.cities.length : (c.cityCount || 0)}</td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('countries-tbody', 3, 'Error: ' + e.message); }
+  }
+
+  /* ===== CITIES ===== */
+  async function loadCities() {
+    try {
+      const list = await api('/api/City/GetAllCities');
+      document.getElementById('cities-count').textContent = list.length;
+      const tbody = document.getElementById('cities-tbody');
+      if (!list.length) { renderEmpty('cities-tbody', 3, 'No cities yet.'); return; }
+      tbody.innerHTML = list.map(c => `
+        <tr>
+          <td>${c.cityId || c.id || '?'}</td>
+          <td>${esc(c.cityName)}</td>
+          <td>${esc(c.country ? c.country.countryName : (c.countryName || '-'))}</td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('cities-tbody', 3, 'Error: ' + e.message); }
+  }
+  async function addCity(e) {
+    e.preventDefault();
+    const country = document.getElementById('city-country').value.trim();
+    const city = document.getElementById('city-name').value.trim();
+    try {
+      await api('/api/City/AddCity/' + encodeURIComponent(country), { method: 'POST', body: { cityName: city } });
+      showToast(`Added "${city}" under ${country}`, 'success');
+      document.getElementById('city-name').value = '';
+      loadCities();
+    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+  }
+
+  /* ===== STREETS ===== */
+  async function loadStreets() {
+    try {
+      const list = await api('/api/Street/GetAllStreets');
+      document.getElementById('streets-count').textContent = list.length;
+      const tbody = document.getElementById('streets-tbody');
+      if (!list.length) { renderEmpty('streets-tbody', 3, 'No streets yet.'); return; }
+      tbody.innerHTML = list.map(s => `
+        <tr>
+          <td>${s.streetId || s.id || '?'}</td>
+          <td>${esc(s.streetName)}</td>
+          <td>${esc(s.city ? s.city.cityName : (s.cityName || '-'))}</td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('streets-tbody', 3, 'Error: ' + e.message); }
+  }
+  async function addStreet(e) {
+    e.preventDefault();
+    const city = document.getElementById('street-city').value.trim();
+    const street = document.getElementById('street-name').value.trim();
+    try {
+      await api('/api/Street/AddStreet/' + encodeURIComponent(city), { method: 'POST', body: { streetName: street } });
+      showToast(`Added "${street}" under ${city}`, 'success');
+      document.getElementById('street-name').value = '';
+      loadStreets();
+    } catch (e2) { showToast('Add failed: ' + e2.message, 'error'); }
+  }
+
+  /* ===== BUILDING NUMBERS ===== */
+  async function loadBuildings() {
+    try {
+      const list = await api('/api/BuildingNumber/GetAllBuildingNumbers');
+      document.getElementById('buildings-count').textContent = list.length;
+      const tbody = document.getElementById('buildings-tbody');
+      if (!list.length) { renderEmpty('buildings-tbody', 3, 'No building numbers yet.'); return; }
+      tbody.innerHTML = list.map(b => `
+        <tr>
+          <td>${b.buildingNumberId || b.id || '?'}</td>
+          <td>${esc(b.buildingNo)}</td>
+          <td>${esc(b.street ? b.street.streetName : (b.streetName || '-'))}</td>
+        </tr>`).join('');
+    } catch (e) { showToast(e.message, 'error'); renderEmpty('buildings-tbody', 3, 'Error: ' + e.message); }
+  }
+
+  /* ===== BOOTSTRAP ===== */
+  window.addEventListener('DOMContentLoaded', () => {
+    showSection(location.hash.slice(1) || 'dashboard');
+  });
+</script>
+
+</body>
+</html>
